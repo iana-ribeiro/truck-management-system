@@ -1,9 +1,12 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import './App.css'
+
+// useEffect = "Execute este código quando alguma coisa acontecer." Executa quando o React decide que é a hora (por exemplo, ao abrir a página).
 
 function App() {
   const [nome, setNome] = useState("");
   const [ano, setAno] = useState("");
+  const [albums, setAlbums] = useState([]);
 
 async function cadastrarAlbum() {
     
@@ -17,6 +20,18 @@ async function cadastrarAlbum() {
       
     console.log(resposta);
   }
+
+  async function buscarAlbums() {
+    const resposta = await fetch("http://localhost:4000/albums");
+
+    const dados = await resposta.json();
+
+    setAlbums(dados);
+  }
+
+  useEffect(() => {
+    buscarAlbums();
+  }, []);
 
   return (
 <div>
@@ -45,6 +60,16 @@ async function cadastrarAlbum() {
   <br />
 
   <button onClick={cadastrarAlbum}>Cadastrar</button>
+
+  <br />
+  <br />
+
+  <h2>Álbuns Cadastrados</h2>
+
+  {albums.map((album) => (
+  <p key={album.id}>{album.nome} - {album.ano}</p>
+  ))}
+
 </div>
 
   )
