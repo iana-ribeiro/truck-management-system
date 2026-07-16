@@ -91,7 +91,7 @@ app.put('/albums/:id', (req, res) => {
       return res.status(200).json({
         message: 'Álbum atualizado com sucesso.',
       });
-    }
+    },
   );
 });
 
@@ -107,8 +107,29 @@ app.delete('/albums/:id', (req, res) => {
     return res.status(200).json({
       message: 'Álbum deletado com sucesso.',
     });
-    }
-  );
+  });
+});
+
+app.get('/carregamentos', (req, res) => {
+  const carregamentos = [
+    {
+      ordem: 'TS-482731',
+      cliente: 'Horizonte Sul',
+      placa: 'ABC-1D23',
+    },
+    {
+      ordem: 'TS-615904',
+      cliente: 'Atlas Engenharia',
+      placa: 'QWE-7F89',
+    },
+    {
+      ordem: 'TS-903218',
+      cliente: 'Vale Forte',
+      placa: 'MNO-4H56',
+    },
+  ];
+
+  res.json(carregamentos);
 });
 
 // Inicialização
