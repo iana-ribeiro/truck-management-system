@@ -22,12 +22,6 @@ function TabelaCarregamentos({ carregamentos }) {
           ))}
         </tbody>
       </table>
-
-      {carregamentos.map((carregamento) => (
-        <p key={carregamento.ordem}>
-          {carregamento.ordem} - {carregamento.cliente} - {carregamento.placa}
-        </p>
-      ))}
     </div>
   );
 }

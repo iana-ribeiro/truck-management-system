@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import './App.css';
+import { useEffect, useState } from 'react'; //"React, vou usar memória e vou executar um código quando a página abrir."
+import '../App.css';
 
-import TabelaCarregamentos from './components/TabelaCarregamentos';
+import TabelaCarregamentos from '../components/TabelaCarregamentos';
 
 // useEffect = "Execute este código quando alguma coisa acontecer." Executa quando o React decide que é a hora (por exemplo, ao abrir a página).
 
