@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'; //"React, vou usar memória e vou executar um código quando a página abrir."
-import '../App.css';
-import Header from '../components/Header';
-import StatusCard from '../components/StatusCards';
-import TabelaCarregamentos from '../components/TabelaCarregamentos'; // Traz o componente da tabela.
+import Header from '../components/Header/Header';
+import StatusCard from '../components/StatusCards/StatusCards';
+import BarraPesquisa from '../components/BarraPesquisa/BarraPesquisa';
+import TabelaCarregamentos from '../components/TabelaCarregamentos/TabelaCarregamentos'; // Traz o componente da tabela.
 import { buscarCarregamentos } from '../services/carregamentos'; // Traz a função.
 
 // useEffect = "Execute este código quando alguma coisa acontecer." Executa quando o React decide que é a hora (por exemplo, ao abrir a página).
@@ -25,6 +25,8 @@ function Carregamentos() {
       <Header />
 
       <StatusCard />
+
+      <BarraPesquisa />
 
       <TabelaCarregamentos carregamentos={carregamentos} />
     </div>

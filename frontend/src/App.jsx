@@ -1,5 +1,3 @@
-import "./App.css";
-
 import Carregamentos from './pages/Carregamentos';
 
 function App() {

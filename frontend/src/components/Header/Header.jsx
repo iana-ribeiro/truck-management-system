@@ -1,6 +1,8 @@
+import "./Header.css";
+
 function Header() {
   return (
-    <header>
+    <header className="header">
       <h1>Gestão de Carregamentos</h1>
 
       <p>Monitoramento dos carregamentos da planta em tempo real.</p>

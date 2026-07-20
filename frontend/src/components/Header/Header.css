@@ -1,0 +1,15 @@
+.header {
+    background-color: var(--cor-card);
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.header h1 {
+    font-size: 2rem;
+    color: var(--cor-texto);
+}
+
+.header p {
+    font-size: 8px;
+    color: var(--cor-texto-secundario);
+}
