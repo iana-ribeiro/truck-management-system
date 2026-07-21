@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'; //"React, vou usar memória e vou executar um código quando a página abrir."
-import Header from '../components/Header/Header';
-import StatusCard from '../components/StatusCards/StatusCards';
 import BarraPesquisa from '../components/BarraPesquisa/BarraPesquisa';
+import Header from '../components/Header/Header';
+import Layout from '../components/Layout/Layout';
+import StatusCard from '../components/StatusCards/StatusCards';
 import TabelaCarregamentos from '../components/TabelaCarregamentos/TabelaCarregamentos'; // Traz o componente da tabela.
 import { buscarCarregamentos } from '../services/carregamentos'; // Traz a função.
 
@@ -15,13 +16,15 @@ function Carregamentos() {
       const dados = await buscarCarregamentos();
 
       setCarregamentos(dados);
+
+      console.log(dados);
     }
 
     carregarDados();
   }, []);
 
   return (
-    <div>
+    <Layout>
       <Header />
 
       <StatusCard />
@@ -29,7 +32,7 @@ function Carregamentos() {
       <BarraPesquisa />
 
       <TabelaCarregamentos carregamentos={carregamentos} />
-    </div>
+    </Layout>
   );
 }
 

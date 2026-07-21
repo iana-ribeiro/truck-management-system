@@ -1,9 +1,11 @@
-function Card(props) {
+import './Card.css';
+
+function Card({ titulo, valor }) {
   return (
-    <div>
-      <h3>{props.título}</h3>
-      <h2>{props.valor}</h2>
-    </div>
+    <article className="card">
+      <h3>{titulo}</h3>
+      <span>{valor}</span>
+    </article>
   );
 }
 
