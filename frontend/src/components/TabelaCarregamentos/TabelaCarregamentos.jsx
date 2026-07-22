@@ -1,9 +1,11 @@
+import "./TabelaCarregamentos.css";
+
 function TabelaCarregamentos({ carregamentos }) {
   return (
-    <div>
+    <section className="tabela-container">
       <h2>Carregamentos</h2>
 
-      <table>
+      <table className="tabela-carregamentos">
         <thead>
           <tr>
             <th>Ordem</th>
@@ -13,16 +15,24 @@ function TabelaCarregamentos({ carregamentos }) {
         </thead>
         
         <tbody>
-          {carregamentos.map((carregamento) => (
-            <tr key={carregamento.ordem}>
-              <td>{carregamento.ordem}</td>
-              <td>{carregamento.cliente}</td>
-              <td>{carregamento.placa}</td>
+          {carregamentos.length > 0 ? (
+            carregamentos.map((carregamento) => (
+              <tr key={carregamento.ordem}>
+                <td>{carregamento.ordem}</td>
+                <td>{carregamento.cliente}</td>
+                <td>{carregamento.placa}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" className="sem-dados">
+                Nenhum carregamento encontrado.
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
-    </div>
+    </section>
   );
 }
 

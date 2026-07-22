@@ -1,13 +1,13 @@
 import Card from '../Card/Card';
 import './StatusCards.css';
 
-function StatusCard() {
+function StatusCard({totalOrdens, totalClientes, totalPlacas, totalCarregamentos}) {
   return (
     <section className="status-cards">
-      <Card título="Hoje" valor={120} />
-      <Card título="Em andamento" valor={15} />
-      <Card título="Finalizados" valor={98} />
-      <Card título="Pendentes" valor={7} />
+      <Card título="Ordens" valor={totalOrdens} />
+      <Card título="Clientes" valor={totalClientes} />
+      <Card título="Placas" valor={totalPlacas} />
+      <Card título="Carregamentos" valor={totalCarregamentos} />
     </section>
   );
 }

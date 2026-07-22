@@ -1,0 +1,44 @@
+.tabela-container {
+  background-color: var(--cor-card);
+  border-radius: 10px;
+  padding: 24px;
+  border: 1px solid var(--cor-borda);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table-container h2 {
+  margin-bottom: 20px;
+  color: var(--cor-texto);
+}
+
+.tabela-carregamentos {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-carregamentos th {
+  text-align: left;
+  padding: 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--cor-texto-secundario);
+  border-bottom: 2px solid var(--cor-borda);
+}
+
+.tabela-carregamentos td {
+  padding: 16px;
+  border-bottom: 1px solid var(--cor-borda);
+  color: var(--cor-texto);
+}
+
+.tabela-carregamentos tbody tr:hover {
+  background-color: #f8fafc;
+  transition: background-color 0.2s;
+}
+
+.sem-dados {
+  text-align: center;
+  padding: 40px;
+  color: var(--cor-texto-secundario);
+  font-style: italic;
+}

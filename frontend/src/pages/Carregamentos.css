@@ -1,0 +1,20 @@
+.acoes {
+  display: flex;
+  justify-content: flex-end;
+  margin: 20px 0;
+}
+
+.acoes button {
+  background-color: var(--cor-primaria);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+.acoes button:hover {
+  background-color: #1d4ed8;
+}
