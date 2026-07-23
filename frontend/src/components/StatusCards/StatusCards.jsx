@@ -1,14 +1,22 @@
-import Card from '../Card/Card';
 import './StatusCards.css';
 
-function StatusCard({totalOrdens, totalClientes, totalPlacas, totalCarregamentos}) {
+function StatusCard({ titulo, valor, icone}) {
   return (
-    <section className="status-cards">
-      <Card título="Ordens" valor={totalOrdens} />
-      <Card título="Clientes" valor={totalClientes} />
-      <Card título="Placas" valor={totalPlacas} />
-      <Card título="Carregamentos" valor={totalCarregamentos} />
-    </section>
+    <div className="status-card">
+    
+      <div className='status-card__icone'>
+      {icone}
+      </div>
+
+      <h3 className='status-card__valor'>
+      {valor}
+      </h3>
+
+      <p className='status-card__titulo'>
+      {titulo}
+      </p>
+
+    </div>
   );
 }
 

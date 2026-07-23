@@ -1,9 +1,31 @@
 .status-cards {
   display: grid;
-
   grid-template-columns: repeat(4, 1fr);
-
   gap: 24px;
-
   margin-bottom: 24px;
+}
+
+.status-card {
+  background-color: var(--cor-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.status-card__icone {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.status-card__valor {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cor-texto);
+  margin-bottom: 6px;
+}
+
+.status-card__titulo {
+  color: var(--cor-texto-secundario);
+  font-size: 0.9rem;
 }
