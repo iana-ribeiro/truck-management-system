@@ -1,6 +1,7 @@
-import db from "./connection.js"; // O connection.js abriu a ligação. Agora o setup.js pega emprestado.
+import db from './connection.js'; // O connection.js abriu a ligação. Agora o setup.js pega emprestado.
 
-db.serialize(() => { // serialize = Garante a ordem. Evita que vários comandos executem ao mesmo tempo.
+db.serialize(() => {
+  // serialize = Garante a ordem. Evita que vários comandos executem ao mesmo tempo.
 
   db.run(
     `
@@ -11,11 +12,11 @@ db.serialize(() => { // serialize = Garante a ordem. Evita que vários comandos 
     `,
     (err) => {
       if (err) {
-        console.log("Erro Clientes:", err.message);
+        console.log('Erro Clientes:', err.message);
       } else {
-        console.log("✅ Clientes criada");
+        console.log('✅ Clientes criada');
       }
-    }
+    },
   );
 
   db.run(
@@ -28,14 +29,14 @@ db.serialize(() => { // serialize = Garante a ordem. Evita que vários comandos 
     `,
     (err) => {
       if (err) {
-        console.log("Erro Veiculos:", err.message);
+        console.log('Erro Veiculos:', err.message);
       } else {
-        console.log("✅ Veiculos criada");
+        console.log('✅ Veiculos criada');
       }
-    }
+    },
   );
 
-   db.run(
+  db.run(
     `
     CREATE TABLE IF NOT EXISTS Carregamentos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,15 +52,16 @@ db.serialize(() => { // serialize = Garante a ordem. Evita que vários comandos 
     `,
     (err) => {
       if (err) {
-        console.log("Erro Carregamentos:", err.message);
+        console.log('Erro Carregamentos:', err.message);
       } else {
-        console.log("✅ Carregamentos criada");
+        console.log('✅ Carregamentos criada');
       }
-    });
+    },
+  );
 
   // run = Banco... crie...
 });
 
 db.close(() => {
-  console.log("Banco fechado.");
+  console.log('Banco fechado.');
 });
