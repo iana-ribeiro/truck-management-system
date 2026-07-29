@@ -7,7 +7,11 @@
 body {
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
-    font-family: 'Segoe UI', sans-serif;
+    font-family: var(--fonte-texto);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--fonte-titulo);
 }
 
 button, input {

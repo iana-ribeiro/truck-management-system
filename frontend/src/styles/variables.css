@@ -1,13 +1,17 @@
 :root {
-    --cor-fundo: #535353;
+    --cor-fundo: #f8fafc;
 
     --cor-card: #ffffff;
 
     --cor-primaria: #2563eb;
 
-    --cor-borda: #d9d9d9;
+    --cor-borda: #e2e8f0;
 
-    --cor-texto: #1f2937;
+    --cor-texto: #0f172a;
 
-    --cor-texto-secundario: #6b7280;
+    --cor-texto-secundario: #64748b;
+
+    --fonte-titulo: "Archivo", sans-serif;
+
+    --fonte-texto: "Inter", sans-serif;
 }

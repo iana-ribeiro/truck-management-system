@@ -46,7 +46,6 @@ function Carregamentos() {
   const totalOrdens = carregamentos.length; // Quantidade de carregamentos.
   const totalClientes = new Set(carregamentos.map((c) => c.cliente)).size; // Quantidade de clientes.
   const totalPlacas = new Set(carregamentos.map((c) => c.placa)).size; // Quantidade de placas.
-  const totalCarregamentos = carregamentos.length; // Quantidade de carregamentos.
 
   const textoPesquisa = pesquisa.toLowerCase(); // Converte o texto digitado para minúsculo.
 
@@ -62,38 +61,33 @@ function Carregamentos() {
   // Devolve a interface da página.
 
   return (
-    <Layout>
-      <Header />
+<>
+  <Header />
 
-      <div className="status-cards">
-        <StatusCard titulo="Total de Ordens" valor={totalOrdens} icone="📦" />
+  <Layout>
+    <div className="status-cards">
+      <StatusCard titulo="Total de Ordens" valor={totalOrdens} cor="cinza" />
+      <StatusCard titulo="Clientes" valor={totalClientes} cor="azul" />
+      <StatusCard titulo="Placas" valor={totalPlacas} cor="laranja" />
+    </div>
 
-        <StatusCard titulo="Clientes" valor={totalClientes} icone="👥" />
+    <BarraPesquisa
+      pesquisa={pesquisa}
+      setPesquisa={setPesquisa}
+      onAtualizar={carregarDados}
+    />
 
-        <StatusCard titulo="Placas" valor={totalPlacas} icone="🚚" />
+    {carregando ? (
+      <p className="carregando">Carregando...</p>
+    ) : erro ? (
+      <p>{erro}</p>
+    ) : (
+      <TabelaCarregamentos carregamentos={carregamentosFiltrados} />
+    )}
+  </Layout>
+</>
 
-        <StatusCard
-          titulo="Carregamentos"
-          valor={totalCarregamentos}
-          icone="📋"
-        />
-      </div>
-
-      <BarraPesquisa pesquisa={pesquisa} setPesquisa={setPesquisa} />
-
-      <div className="acoes">
-        <button onClick={carregarDados}>Atualizar</button>
-      </div>
-
-      {carregando ? ( // Está carregando? Se sim, exibe a mensagem "Carregando...".
-        <p className="carregando">Carregando...</p>
-      ) : erro ? (
-        <p>{erro}</p> // Houve algum erro? Se sim, exibe a mensagem de erro.
-      ) : (
-        <TabelaCarregamentos carregamentos={carregamentosFiltrados} />
-      )}
-    </Layout>
-  );
+);
 }
 
 export default Carregamentos;

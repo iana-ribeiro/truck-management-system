@@ -31,7 +31,7 @@ db.serialize(() => { // serialize = Garante a ordem. Evita que vários comandos 
         `)
 
     db.run(`INSERT INTO Veiculos (placa, modelo)
-        VALUES ("GHI", "Mercedes Actros");
+        VALUES ("GHI-1234", "Mercedes Actros");
         `)
 
     db.run(`INSERT INTO Carregamentos (ordem, cliente_id, veiculo_id, peso, status)
