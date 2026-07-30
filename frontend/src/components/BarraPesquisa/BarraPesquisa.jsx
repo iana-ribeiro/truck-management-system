@@ -1,6 +1,6 @@
 import './BarraPesquisa.css';
 
-function BarraPesquisa( { pesquisa, setPesquisa } ) {
+function BarraPesquisa( { pesquisa, setPesquisa, onAtualizar } ) {
 return (
     <section className="barra-pesquisa">
         <input
@@ -10,7 +10,7 @@ return (
         onChange={(e) => setPesquisa(e.target.value)}
         />
 
-        <button>Atualizar</button>
+        <button onClick={onAtualizar}>Atualizar</button>
     </section>
 )}
 
