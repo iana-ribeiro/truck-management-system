@@ -1,3 +1,5 @@
+// Coloca dados fictícios dentro das tabelas, pra ter algo pra testar.
+
 import db from './connection.sqlite.js'; // O connection.js abriu a ligação. Agora o seed.js pega emprestado.
 
 db.serialize(() => {

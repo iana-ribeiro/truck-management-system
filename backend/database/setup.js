@@ -1,3 +1,5 @@
+// Cria as tabelas do banco (as "prateleiras vazias").
+
 import db from './connection.sqlite.js'; // O connection.js abriu a ligação. Agora o setup.js pega emprestado.
 
 db.serialize(() => {

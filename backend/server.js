@@ -1,5 +1,6 @@
-// "Servidor, ligue. Aceite requisições. Quando alguém pedir carregamentos, envie para as rotas."
-// O server.js é a recepção. Você entra e pergunta: Quero informações sobre carregamentos. A recepção responde: Vá até o setor de carregamentos. Ela não responde sua pergunta. Ela apenas encaminha.
+// 1
+// A execução começa por aqui.
+// 
 
 import cors from 'cors'; // Importando o CORS para permitir que o frontend acesse o backend.
 import express from 'express'; // Você "pegou emprestada" a biblioteca.

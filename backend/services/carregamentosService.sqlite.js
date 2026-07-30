@@ -1,11 +1,11 @@
 // 3
-// Serviço responsável por buscar os carregamentos.
+// Vai no banco de dados, busca os dados, e entrega pro controller.
 
-import db from '../database/connection.sqlite.js'; // O connection.js abriu a ligação. Agora o carregamentosService.js pega emprestado.
+import db from '../database/connection.sqlite.js'; 
 
 export async function buscarCarregamentos() {
   return new Promise((resolve, reject) => {
-    // new = Cria um objeto novo. Promise = Irá entregar uma resposta no futuro. resolve = Du tudo certo. reject = Deu erro.
+    // new = Cria um objeto novo. Promise = Irá entregar uma resposta no futuro. resolve = Deu tudo certo. reject = Deu erro.
     db.all(
       `
       SELECT

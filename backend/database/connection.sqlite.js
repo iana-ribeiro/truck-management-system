@@ -1,3 +1,5 @@
+// Abre a "ligação" com o banco de dados. É o único arquivo que sabe como falar com aquele banco específico.
+
 import sqlite3 from 'sqlite3'; // "Vou usar a biblioteca SQLite."
 
 sqlite3.verbose(); // Faz o SQLite mostrar mensagens mais detalhadas caso aconteça algum erro.
