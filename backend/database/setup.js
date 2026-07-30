@@ -1,4 +1,4 @@
-import db from './connection.js'; // O connection.js abriu a ligação. Agora o setup.js pega emprestado.
+import db from './connection.sqlite.js'; // O connection.js abriu a ligação. Agora o setup.js pega emprestado.
 
 db.serialize(() => {
   // serialize = Garante a ordem. Evita que vários comandos executem ao mesmo tempo.
@@ -38,18 +38,16 @@ db.serialize(() => {
 
   db.run(
     `
-    CREATE TABLE IF NOT EXISTS Carregamentos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        ordem TEXT NOT NULL,
-        cliente_id INTEGER NOT NULL,
-        veiculo_id INTEGER NOT NULL,
-        peso REAL, 
-        status TEXT,
+  CREATE TABLE IF NOT EXISTS Carregamentos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ordem TEXT NOT NULL,
+      cliente_id INTEGER NOT NULL,
+      veiculo_id INTEGER NOT NULL,
 
-        FOREIGN KEY (cliente_id) REFERENCES Clientes(id),
-        FOREIGN KEY (veiculo_id) REFERENCES Veiculos(id)
-    );
-    `,
+      FOREIGN KEY (cliente_id) REFERENCES Clientes(id),
+      FOREIGN KEY (veiculo_id) REFERENCES Veiculos(id)
+  );
+  `,
     (err) => {
       if (err) {
         console.log('Erro Carregamentos:', err.message);
