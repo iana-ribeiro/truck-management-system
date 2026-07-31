@@ -18,9 +18,9 @@ function TabelaCarregamentos({ carregamentos }) {
           {carregamentos.length > 0 ? (
             carregamentos.map((carregamento) => (
               <tr key={carregamento.ordem}>
-                <td>{carregamento.ordem}</td>
+                <td>{carregamento.planta}</td>
+                <td>{carregamento.pedido}</td>
                 <td>{carregamento.cliente}</td>
-                <td>{carregamento.placa}</td>
               </tr>
             ))
           ) : (

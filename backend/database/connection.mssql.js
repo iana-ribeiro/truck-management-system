@@ -2,7 +2,9 @@
 // Antes: abríamos um arquivo (SQLite). Agora: abrimos uma conexão com um servidor.
 
 import sql from 'mssql';
-import 'dotenv/config'; // Lê o arquivo .env e disponibiliza em process.env
+import dotenv from "dotenv"; // Lê o arquivo .env e disponibiliza em process.env
+
+dotenv.config();
 
 const config = {
   user: process.env.DB_USER,
@@ -14,6 +16,7 @@ const config = {
     encrypt: process.env.DB_ENCRYPT === 'true',
     trustServerCertificate: true,
   },
+  
 };
 
 let pool;

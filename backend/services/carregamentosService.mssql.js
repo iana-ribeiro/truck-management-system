@@ -8,19 +8,15 @@ export async function buscarCarregamentos() {
 
   const resultado = await pool.request().query(`
     SELECT
-      Carregamentos.ordem,
-      Clientes.nome AS cliente,
-      Veiculos.placa,
-      Carregamentos.status,
-      Carregamentos.peso
+    planta,
+    pedido,
+    cliente,
+    doca
 
-    FROM Carregamentos
+    FROM dbo.vfluxo
 
-    INNER JOIN Clientes
-      ON Carregamentos.cliente_id = Clientes.id
-
-    INNER JOIN Veiculos
-      ON Carregamentos.veiculo_id = Veiculos.id
+    WHERE planta='G. TATUI'
+      
   `);
 
   // No sqlite3 os dados vinham direto no callback (err, rows).
