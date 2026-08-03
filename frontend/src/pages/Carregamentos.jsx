@@ -30,7 +30,7 @@ function Carregamentos() {
 
       setCarregamentos(dados); //(2) Guarda os dados no estado da página.
     } catch {
-      // Se houver algum erro, exibe a mensagem de erro.
+      console.error(error);  // Mostra o erro real no console, pra facilitar debug no futuro.
       setErro('Erro ao buscar os carregamentos. Tente novamente mais tarde.');
     } finally {
       setCarregando(false); // A página terminou de carregar.
@@ -43,9 +43,9 @@ function Carregamentos() {
 
   // Calcula os totais para exibir nos cards de status.
 
-  const totalOrdens = carregamentos.length; // Quantidade de carregamentos.
+  const totalPedidos = carregamentos.length; // Quantidade de carregamentos.
   const totalClientes = new Set(carregamentos.map((c) => c.cliente)).size; // Quantidade de clientes.
-  const totalPlacas = new Set(carregamentos.map((c) => c.placa)).size; // Quantidade de placas.
+  const totalDocas = new Set(carregamentos.map((c) => c.doca)).size; // Quantidade de placas.
 
   const textoPesquisa = pesquisa.toLowerCase(); // Converte o texto digitado para minúsculo.
 
@@ -53,9 +53,9 @@ function Carregamentos() {
 
   const carregamentosFiltrados = carregamentos.filter(
     (c) =>
-      c.ordem.toLowerCase().includes(textoPesquisa) ||
+      c.pedido.toLowerCase().includes(textoPesquisa) ||
       c.cliente.toLowerCase().includes(textoPesquisa) ||
-      c.placa.toLowerCase().includes(textoPesquisa),
+      c.doca.toLowerCase().includes(textoPesquisa),
   );
 
   // Devolve a interface da página.
@@ -66,9 +66,9 @@ function Carregamentos() {
 
   <Layout>
     <div className="status-cards">
-      <StatusCard titulo="Total de Ordens" valor={totalOrdens} cor="cinza" />
+      <StatusCard titulo="Total de Pedidos" valor={totalPedidos} cor="cinza" />
       <StatusCard titulo="Clientes" valor={totalClientes} cor="azul" />
-      <StatusCard titulo="Placas" valor={totalPlacas} cor="laranja" />
+      <StatusCard titulo="Docas" valor={totalDocas} cor="laranja" />
     </div>
 
     <BarraPesquisa

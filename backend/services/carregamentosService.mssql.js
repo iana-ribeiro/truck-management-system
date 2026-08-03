@@ -8,7 +8,6 @@ export async function buscarCarregamentos() {
 
   const resultado = await pool.request().query(`
     SELECT
-    planta,
     pedido,
     cliente,
     doca
@@ -16,7 +15,7 @@ export async function buscarCarregamentos() {
     FROM dbo.vfluxo
 
     WHERE planta='G. TATUI'
-      
+    AND Frete = 'DAP'
   `);
 
   // No sqlite3 os dados vinham direto no callback (err, rows).
