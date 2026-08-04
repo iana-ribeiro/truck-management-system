@@ -1,6 +1,15 @@
+import { useState } from 'react';
+import ChamarDocaModal from '../ChamarDocaModal/ChamarDocaModal';
 import './TabelaCarregamentos.css';
 
 function TabelaCarregamentos({ carregamentos }) {
+  const [carregamentoSelecionado, setCarregamentoSelecionado] = useState(null);
+
+  function handleConfirmar(doca) {
+    console.log(`${carregamentoSelecionado.placa} chamado para a ${doca}`);
+    setCarregamentoSelecionado(null);
+  }
+
   return (
     <section className="tabela-container">
       <h2>Carregamentos</h2>
@@ -17,6 +26,7 @@ function TabelaCarregamentos({ carregamentos }) {
             <th>Iní. Carreg.</th>
             <th>Fim Carreg.</th>
             <th>Frete</th>
+            <th>Ação</th>
           </tr>
         </thead>
 
@@ -33,17 +43,32 @@ function TabelaCarregamentos({ carregamentos }) {
                 <td>{carregamento.inicioCarregamento}</td>
                 <td>{carregamento.fimCarregamento}</td>
                 <td>{carregamento.frete}</td>
+                <td>
+                  <button
+  className="botao botao--primario botao--compacto"
+  onClick={() => setCarregamentoSelecionado(carregamento)}
+>
+  Chamar
+</button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="9" className="sem-dados">
+              <td colSpan="10" className="sem-dados">
                 Nenhum carregamento encontrado.
               </td>
             </tr>
           )}
         </tbody>
       </table>
+
+      <ChamarDocaModal
+        carregamento={carregamentoSelecionado}
+        carregamentos={carregamentos}
+        onFechar={() => setCarregamentoSelecionado(null)}
+        onConfirmar={handleConfirmar}
+      />
     </section>
   );
 }

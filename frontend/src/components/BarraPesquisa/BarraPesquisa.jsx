@@ -10,7 +10,7 @@ function BarraPesquisa({ pesquisa, setPesquisa, onAtualizar }) {
         onChange={(e) => setPesquisa(e.target.value)}
       />
 
-      <button onClick={onAtualizar}>Atualizar</button>
+      <button className="botao botao--primario" onClick={onAtualizar}>Atualizar</button>
     </section>
   );
 }

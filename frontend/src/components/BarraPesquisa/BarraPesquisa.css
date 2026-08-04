@@ -27,20 +27,3 @@
   border-color: var(--cor-primaria);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
-
-.barra-pesquisa button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: var(--cor-primaria);
-  color: white;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.15s;
-  white-space: nowrap;
-}
-
-.barra-pesquisa button:hover {
-  background-color: #1d4ed8;
-}

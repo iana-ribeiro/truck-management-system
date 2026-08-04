@@ -1,0 +1,89 @@
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+
+.modal-caixa {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--cor-card);
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.modal-cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.modal-cabecalho h2 {
+  font-size: var(--fonte-lg);
+  color: var(--cor-texto);
+}
+
+.modal-cabecalho p {
+  font-size: var(--fonte-sm);
+  color: var(--cor-texto-secundario);
+  margin-top: 4px;
+}
+
+.modal-fechar {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--cor-texto-secundario);
+  cursor: pointer;
+}
+
+.modal-fechar:hover {
+  color: var(--cor-texto);
+}
+
+.modal-corpo {
+  padding: 20px 24px;
+}
+
+.modal-corpo label {
+  display: block;
+  font-size: var(--fonte-sm);
+  font-weight: 500;
+  color: var(--cor-texto);
+  margin-bottom: 6px;
+}
+
+.modal-corpo select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  font-size: var(--fonte-sm);
+  color: var(--cor-texto);
+  background-color: var(--cor-card);
+  outline: none;
+}
+
+.modal-corpo select:focus {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.modal-rodape {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--cor-borda);
+  background-color: var(--cor-fundo);
+}
