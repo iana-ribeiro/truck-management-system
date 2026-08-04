@@ -8,7 +8,7 @@
 
 .tabela-container h2 {
   margin-bottom: 20px;
-  font-size: 1.1rem;
+  font-size: var(--fonte-lg);
   color: var(--cor-texto);
 }
 
@@ -20,7 +20,7 @@
 .tabela-carregamentos th {
   text-align: left;
   padding: 12px 16px;
-  font-size: 0.75rem;
+  font-size: var(--fonte-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -30,7 +30,7 @@
 
 .tabela-carregamentos td {
   padding: 14px 16px;
-  font-size: 0.9rem;
+  font-size: var(--fonte-sm);
   color: var(--cor-texto);
   border-bottom: 1px solid var(--cor-borda);
 }

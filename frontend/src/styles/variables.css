@@ -1,17 +1,26 @@
 :root {
-    --cor-fundo: #f8fafc;
+  /* Cores base */
+  --cor-fundo: #f8fafc;
+  --cor-card: #ffffff;
+  --cor-primaria: #2563eb;
+  --cor-borda: #e2e8f0;
+  --cor-texto: #0f172a;
+  --cor-texto-secundario: #64748b;
 
-    --cor-card: #ffffff;
+  /* Cores da sidebar */
+  --cor-sidebar-fundo: #0f172a;
+  --cor-sidebar-hover: #1e293b;
+  --cor-sidebar-texto: #94a3b8;
+  --cor-sidebar-borda: #1e293b;
 
-    --cor-primaria: #2563eb;
+  /* Fontes */
+  --fonte-titulo: 'Archivo', sans-serif;
+  --fonte-texto: 'Inter', sans-serif;
 
-    --cor-borda: #e2e8f0;
-
-    --cor-texto: #0f172a;
-
-    --cor-texto-secundario: #64748b;
-
-    --fonte-titulo: "Archivo", sans-serif;
-
-    --fonte-texto: "Inter", sans-serif;
+  /* Escala de tamanhos de fonte */
+  --fonte-xs: 0.75rem;
+  --fonte-sm: 0.875rem;
+  --fonte-base: 1rem;
+  --fonte-lg: 1.25rem;
+  --fonte-xl: 1.5rem;
 }

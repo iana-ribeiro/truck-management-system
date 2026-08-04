@@ -13,7 +13,7 @@ import './Carregamentos.css';
 
 function Carregamentos() {
   const [carregamentos, setCarregamentos] = useState([]); // carregamentos = Guarda os dados da tabela. setCarregamentos = É a função que altera essa variável. Analogia com o controle remoto.
-  const [pesquisa, setPesquisa] = useState(''); // pesquisa = Quarda o que o usuário digitou. setPesquisa = É a função que altera essa variável.
+  const [pesquisa, setPesquisa] = useState(''); // pesquisa = Guarda o que o usuário digitou. setPesquisa = É a função que altera essa variável.
   const [carregando, setCarregando] = useState(true); // carregando = Guarda se a página está carregando. setCarregando = É a função que altera essa variável.
   const [erro, setErro] = useState(''); // erro = Guarda se houve algum erro. setErro = É a função que altera essa variável.
 
@@ -29,8 +29,8 @@ function Carregamentos() {
       const dados = await buscarCarregamentos(); // (1) Conversa com a API.
 
       setCarregamentos(dados); //(2) Guarda os dados no estado da página.
-    } catch {
-      console.error(error);  // Mostra o erro real no console, pra facilitar debug no futuro.
+    } catch (error) {
+      console.error(error); // Mostra o erro real no console, pra facilitar debug no futuro.
       setErro('Erro ao buscar os carregamentos. Tente novamente mais tarde.');
     } finally {
       setCarregando(false); // A página terminou de carregar.
@@ -38,56 +38,71 @@ function Carregamentos() {
   }
 
   useEffect(() => {
-    carregarDados(); // Quando os dados estiverem prontos, executa a função que busca os carregamentos na API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    carregarDados();
   }, []);
 
   // Calcula os totais para exibir nos cards de status.
 
-  const totalPedidos = carregamentos.length; // Quantidade de carregamentos.
-  const totalClientes = new Set(carregamentos.map((c) => c.cliente)).size; // Quantidade de clientes.
-  const totalDocas = new Set(carregamentos.map((c) => c.doca)).size; // Quantidade de placas.
+  const totalDoDia = carregamentos.length;
+  const aguardandoNaFila = carregamentos.filter(
+    (c) => c.status === 'Aguardando na fila',
+  ).length;
+  const emCarregamento = carregamentos.filter(
+    (c) => c.status === 'Em carregamento',
+  ).length;
+  const concluido = carregamentos.filter(
+    (c) => c.status === 'Concluído',
+  ).length;
 
   const textoPesquisa = pesquisa.toLowerCase(); // Converte o texto digitado para minúsculo.
 
-  // Filtra os carregamentos de acordo com o texto digitado na barra de pesquisa. Verifica se o texto digitado está contido na ordem, cliente ou placa.
+  // Filtra os carregamentos de acordo com o texto digitado na barra de pesquisa. Verifica se o texto digitado está contido no pedido ou no cliente.
 
   const carregamentosFiltrados = carregamentos.filter(
     (c) =>
       c.pedido.toLowerCase().includes(textoPesquisa) ||
-      c.cliente.toLowerCase().includes(textoPesquisa) ||
-      c.doca.toLowerCase().includes(textoPesquisa),
+      c.cliente.toLowerCase().includes(textoPesquisa),
   );
 
   // Devolve a interface da página.
 
   return (
-<>
-  <Header />
+    <>
+      <Header />
 
-  <Layout>
-    <div className="status-cards">
-      <StatusCard titulo="Total de Pedidos" valor={totalPedidos} cor="cinza" />
-      <StatusCard titulo="Clientes" valor={totalClientes} cor="azul" />
-      <StatusCard titulo="Docas" valor={totalDocas} cor="laranja" />
-    </div>
+      <Layout>
+        <div className="status-cards">
+          <StatusCard titulo="Total do Dia" valor={totalDoDia} cor="cinza" />
+          <StatusCard
+            titulo="Aguardando na Fila"
+            valor={aguardandoNaFila}
+            cor="azul"
+          />
+          <StatusCard
+            titulo="Em Carregamento"
+            valor={emCarregamento}
+            cor="laranja"
+          />
+          <StatusCard titulo="Concluído" valor={concluido} cor="verde" />
+        </div>
 
-    <BarraPesquisa
-      pesquisa={pesquisa}
-      setPesquisa={setPesquisa}
-      onAtualizar={carregarDados}
-    />
+        <BarraPesquisa
+          pesquisa={pesquisa}
+          setPesquisa={setPesquisa}
+          onAtualizar={carregarDados}
+        />
 
-    {carregando ? (
-      <p className="carregando">Carregando...</p>
-    ) : erro ? (
-      <p>{erro}</p>
-    ) : (
-      <TabelaCarregamentos carregamentos={carregamentosFiltrados} />
-    )}
-  </Layout>
-</>
-
-);
+        {carregando ? (
+          <p className="carregando">Carregando...</p>
+        ) : erro ? (
+          <p>{erro}</p>
+        ) : (
+          <TabelaCarregamentos carregamentos={carregamentosFiltrados} />
+        )}
+      </Layout>
+    </>
+  );
 }
 
 export default Carregamentos;

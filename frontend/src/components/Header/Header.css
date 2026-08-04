@@ -8,13 +8,13 @@
 }
 
 .header h1 {
-  font-size: 1.25rem;
+  font-size: var(--fonte-lg);
   font-weight: 600;
   color: var(--cor-texto);
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .header p {
   color: var(--cor-texto-secundario);
-  font-size: 0.875rem;
+  font-size: var(--fonte-sm);
 }

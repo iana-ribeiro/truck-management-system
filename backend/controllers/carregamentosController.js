@@ -1,8 +1,10 @@
 // 3
 // Resumo do arquivo: ele recebe o pedido, tenta buscar os dados chamando o service, e devolve pro cliente — ou os dados certinhos, ou uma mensagem de erro, se algo falhar no caminho.
 
-// Pra usar o SQLite (banco de testes/fictício):
-import { buscarCarregamentos } from '../services/carregamentosService.mssql.js';
+// Pra usar o banco de testes/fictício:
+import { buscarCarregamentos } from '../services/carregamentosService.mock.js';
+// Pra usar o banco SQL Server:
+// import { buscarCarregamentos } from '../services/carregamentosService.mssql.js';
 // Importa a função que sabe buscar os dados no banco.
 
 // Pra usar o SQL Server (banco real, quando passar o acesso):

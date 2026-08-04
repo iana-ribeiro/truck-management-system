@@ -1,0 +1,71 @@
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background-color: var(--cor-sidebar-fundo);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.sidebar__marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid var(--cor-sidebar-borda);
+}
+
+.sidebar__logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: var(--cor-primaria);
+  color: white;
+  font-weight: 700;
+  font-family: var(--fonte-titulo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar__marca-titulo {
+  color: white;
+  font-size: var(--fonte-sm);
+  font-weight: 600;
+}
+
+.sidebar__marca-subtitulo {
+  color: var(--cor-sidebar-texto);
+  font-size: var(--fonte-xs);
+  margin-top: 2px;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px;
+}
+
+.sidebar__item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: var(--fonte-sm);
+  font-weight: 500;
+  color: var(--cor-sidebar-texto);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.sidebar__item:hover {
+  background-color: var(--cor-sidebar-hover);
+  color: #f1f5f9;
+}
+
+.sidebar__item--ativo {
+  background-color: var(--cor-primaria);
+  color: white;
+}

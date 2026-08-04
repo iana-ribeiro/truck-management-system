@@ -1,6 +1,6 @@
 .status-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -21,20 +21,27 @@
   margin-bottom: 10px;
 }
 
-.status-card__dot--cinza { background-color: #94a3b8; }
-.status-card__dot--azul { background-color: #3b82f6; }
-.status-card__dot--laranja { background-color: #f59e0b; }
-.status-card__dot--laranja-forte { background-color: #f97316; }
-.status-card__dot--verde { background-color: #10b981; }
+.status-card__dot--cinza {
+  background-color: #94a3b8;
+}
+.status-card__dot--azul {
+  background-color: #3b82f6;
+}
+.status-card__dot--laranja {
+  background-color: #f59e0b;
+}
+.status-card__dot--verde {
+  background-color: #10b981;
+}
 
 .status-card__valor {
-  font-size: 1.75rem;
+  font-size: var(--fonte-xl);
   font-weight: 700;
   color: var(--cor-texto);
   margin-bottom: 4px;
 }
 
 .status-card__titulo {
-  font-size: 0.85rem;
+  font-size: var(--fonte-xs);
   color: var(--cor-texto-secundario);
 }
