@@ -14,7 +14,7 @@ const colunas = [
   { chave: "frete", rotulo: "Frete" },
 ];
 
-function TabelaCarregamentos({ carregamentos }) {
+function TabelaCarregamentos({ carregamentos, carregando }) {
   const [carregamentoSelecionado, setCarregamentoSelecionado] = useState(null);
   const [ordenacao, setOrdenacao] = useState({ coluna: null, direcao: "asc" });
 
@@ -70,7 +70,20 @@ function TabelaCarregamentos({ carregamentos }) {
         </thead>
 
         <tbody>
-          {carregamentosOrdenados.length > 0 ? (
+          {carregando ? (
+            Array.from({ length: 5 }).map((_, indice) => (
+              <tr key={`esqueleto-${indice}`}>
+                {colunas.map((col) => (
+                  <td key={col.chave}>
+                    <div className="esqueleto celula-esqueleto" />
+                  </td>
+                ))}
+                <td>
+                  <div className="esqueleto celula-esqueleto celula-esqueleto--acao" />
+                </td>
+              </tr>
+            ))
+          ) : carregamentosOrdenados.length > 0 ? (
             carregamentosOrdenados.map((carregamento) => (
               <tr key={carregamento.pedido}>
                 {colunas.map((col) => (

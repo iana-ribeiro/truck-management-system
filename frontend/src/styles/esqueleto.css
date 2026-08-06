@@ -1,0 +1,15 @@
+@keyframes esqueleto-pulso {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.esqueleto {
+  background-color: var(--cor-borda);
+  border-radius: 4px;
+  animation: esqueleto-pulso 1.5s ease-in-out infinite;
+}

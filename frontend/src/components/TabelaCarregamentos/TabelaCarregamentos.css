@@ -26,6 +26,16 @@
   letter-spacing: 0.04em;
   color: var(--cor-texto-secundario);
   border-bottom: 2px solid var(--cor-borda);
+  cursor: pointer;
+  user-select: none;
+}
+
+.tabela-carregamentos th:hover {
+  color: var(--cor-texto);
+}
+
+.icone-ordenacao {
+  font-size: var(--fonte-xs);
 }
 
 .tabela-carregamentos td {
@@ -47,15 +57,13 @@
   font-style: italic;
 }
 
-.tabela-carregamentos th {
-  cursor: pointer;
-  user-select: none;
+.celula-esqueleto {
+  width: 70%;
+  height: 0.9rem;
 }
 
-.tabela-carregamentos th:hover {
-  color: var(--cor-texto);
-}
-
-.icone-ordenacao {
-  font-size: var(--fonte-xs);
+.celula-esqueleto--acao {
+  width: 60px;
+  height: 26px;
+  border-radius: 6px;
 }
