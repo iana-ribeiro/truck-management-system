@@ -46,3 +46,16 @@
   color: var(--cor-texto-secundario);
   font-style: italic;
 }
+
+.tabela-carregamentos th {
+  cursor: pointer;
+  user-select: none;
+}
+
+.tabela-carregamentos th:hover {
+  color: var(--cor-texto);
+}
+
+.icone-ordenacao {
+  font-size: var(--fonte-xs);
+}

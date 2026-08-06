@@ -1,14 +1,52 @@
-import { useState } from 'react';
-import ChamarDocaModal from '../ChamarDocaModal/ChamarDocaModal';
-import './TabelaCarregamentos.css';
+import { useState } from "react";
+import ChamarDocaModal from "../ChamarDocaModal/ChamarDocaModal";
+import "./TabelaCarregamentos.css";
+
+const colunas = [
+  { chave: "pedido", rotulo: "Pedido" },
+  { chave: "cliente", rotulo: "Cliente" },
+  { chave: "placa", rotulo: "Placa" },
+  { chave: "doca", rotulo: "Doca" },
+  { chave: "programado", rotulo: "Programado" },
+  { chave: "chegada", rotulo: "Chegada" },
+  { chave: "inicioCarregamento", rotulo: "Iní. Carreg." },
+  { chave: "fimCarregamento", rotulo: "Fim Carreg." },
+  { chave: "frete", rotulo: "Frete" },
+];
 
 function TabelaCarregamentos({ carregamentos }) {
   const [carregamentoSelecionado, setCarregamentoSelecionado] = useState(null);
+  const [ordenacao, setOrdenacao] = useState({ coluna: null, direcao: "asc" });
 
   function handleConfirmar(doca) {
     console.log(`${carregamentoSelecionado.placa} chamado para a ${doca}`);
     setCarregamentoSelecionado(null);
   }
+
+  function handleOrdenar(chave) {
+    setOrdenacao((atual) => {
+      if (atual.coluna !== chave) {
+        return { coluna: chave, direcao: "asc" };
+      } else {
+        return {
+          coluna: chave,
+          direcao: atual.direcao === "asc" ? "desc" : "asc",
+        };
+      }
+    });
+  }
+
+  const carregamentosOrdenados = [...carregamentos].sort((a, b) => {
+    if (!ordenacao.coluna) return 0;
+
+    const valorA = a[ordenacao.coluna] ?? "";
+    const valorB = b[ordenacao.coluna] ?? "";
+    const resultado = String(valorA).localeCompare(String(valorB), undefined, {
+      numeric: true,
+    });
+
+    return ordenacao.direcao === "asc" ? resultado : -resultado;
+  });
 
   return (
     <section className="tabela-container">
@@ -17,39 +55,34 @@ function TabelaCarregamentos({ carregamentos }) {
       <table className="tabela-carregamentos">
         <thead>
           <tr>
-            <th>Pedido</th>
-            <th>Cliente</th>
-            <th>Placa</th>
-            <th>Doca</th>
-            <th>Programado</th>
-            <th>Chegada</th>
-            <th>Iní. Carreg.</th>
-            <th>Fim Carreg.</th>
-            <th>Frete</th>
+            {colunas.map((col) => (
+              <th key={col.chave} onClick={() => handleOrdenar(col.chave)}>
+                {col.rotulo}
+                {ordenacao.coluna === col.chave && (
+                  <span className="icone-ordenacao">
+                    {ordenacao.direcao === "asc" ? " ▲" : " ▼"}
+                  </span>
+                )}
+              </th>
+            ))}
             <th>Ação</th>
           </tr>
         </thead>
 
         <tbody>
-          {carregamentos.length > 0 ? (
-            carregamentos.map((carregamento) => (
+          {carregamentosOrdenados.length > 0 ? (
+            carregamentosOrdenados.map((carregamento) => (
               <tr key={carregamento.pedido}>
-                <td>{carregamento.pedido}</td>
-                <td>{carregamento.cliente}</td>
-                <td>{carregamento.placa}</td>
-                <td>{carregamento.doca}</td>
-                <td>{carregamento.programado}</td>
-                <td>{carregamento.chegada}</td>
-                <td>{carregamento.inicioCarregamento}</td>
-                <td>{carregamento.fimCarregamento}</td>
-                <td>{carregamento.frete}</td>
+                {colunas.map((col) => (
+                  <td key={col.chave}>{carregamento[col.chave]}</td>
+                ))}
                 <td>
                   <button
-  className="botao botao--primario botao--compacto"
-  onClick={() => setCarregamentoSelecionado(carregamento)}
->
-  Chamar
-</button>
+                    className="botao botao--primario botao--compacto"
+                    onClick={() => setCarregamentoSelecionado(carregamento)}
+                  >
+                    Chamar
+                  </button>
                 </td>
               </tr>
             ))
