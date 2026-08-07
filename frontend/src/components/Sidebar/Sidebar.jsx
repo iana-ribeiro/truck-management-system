@@ -1,14 +1,20 @@
-import './Sidebar.css';
+import { Link, useLocation } from "react-router-dom";
+// Link é o componente de navegação.
+// useLocation é um hook que devolve informações sobre a URL atual.
+import "./Sidebar.css";
 
 const itensMenu = [
-  { rotulo: 'Dashboard' },
-  { rotulo: 'Painel' },
-  { rotulo: 'Gestão de Carregamentos', ativo: true },
-  { rotulo: 'Consulta de Motoristas' },
-  { rotulo: 'Suporte' },
+  // Cada item agora tem uma rota.
+  { rotulo: "Dashboard", rota: "/dashboard" },
+  { rotulo: "Painel", rota: "/painel" },
+  { rotulo: "Gestão de Carregamentos", rota: "/carregamentos", ativo: true },
+  { rotulo: "Consulta de Motoristas", rota: "/motoristas" },
+  { rotulo: "Suporte", rota: "/suporte" },
 ];
 
 function Sidebar() {
+  const location = useLocation(); // Obtendo a localização atual
+
   return (
     <aside className="sidebar">
       <div className="sidebar__marca">
@@ -22,12 +28,13 @@ function Sidebar() {
 
       <nav className="sidebar__nav">
         {itensMenu.map((item) => (
-          <span
+          <Link
             key={item.rotulo}
-            className={`sidebar__item ${item.ativo ? 'sidebar__item--ativo' : ''}`}
+            to={item.rota}
+            className={`sidebar__item ${location.pathname === item.rota ? "sidebar__item--ativo" : ""}`}
           >
             {item.rotulo}
-          </span>
+          </Link>
         ))}
       </nav>
     </aside>

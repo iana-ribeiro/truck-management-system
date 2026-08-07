@@ -49,11 +49,13 @@
 }
 
 .sidebar__item {
+  display: block;
   padding: 10px 12px;
   border-radius: 8px;
   font-size: var(--fonte-sm);
   font-weight: 500;
   color: var(--cor-sidebar-texto);
+  text-decoration: none;
   cursor: pointer;
   transition:
     background-color 0.15s,
