@@ -1,0 +1,52 @@
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.step-indicator__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-indicator__bolha {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--cor-card);
+  border: 2px solid var(--cor-borda);
+  color: var(--cor-texto-secundario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fonte-xs);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.step-indicator__bolha--ativa {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: white;
+}
+
+.step-indicator__bolha--completa {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.step-indicator__rotulo {
+  font-size: var(--fonte-sm);
+  color: var(--cor-texto-secundario);
+  white-space: nowrap;
+}
+
+.step-indicator__linha {
+  width: 32px;
+  height: 2px;
+  background-color: var(--cor-borda);
+}
