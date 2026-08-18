@@ -1,4 +1,11 @@
+.checkin-tela {
+  min-height: 100vh;
+  padding: 40px 24px;
+  background-color: var(--cor-fundo);
+}
+
 .checkin-container {
+  width: 100%;
   max-width: 480px;
   margin: 0 auto;
 }
