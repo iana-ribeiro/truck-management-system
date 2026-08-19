@@ -1,22 +1,23 @@
-import { useState } from "react";
-import ChamarDocaModal from "../ChamarDocaModal/ChamarDocaModal";
-import "./TabelaCarregamentos.css";
+import { useState } from 'react';
+import { ArrowUp, ArrowDown } from 'lucide-react';
+import ChamarDocaModal from '../ChamarDocaModal/ChamarDocaModal';
+import './TabelaCarregamentos.css';
 
 const colunas = [
-  { chave: "pedido", rotulo: "Pedido" },
-  { chave: "cliente", rotulo: "Cliente" },
-  { chave: "placa", rotulo: "Placa" },
-  { chave: "doca", rotulo: "Doca" },
-  { chave: "programado", rotulo: "Programado" },
-  { chave: "chegada", rotulo: "Chegada" },
-  { chave: "inicioCarregamento", rotulo: "Iní. Carreg." },
-  { chave: "fimCarregamento", rotulo: "Fim Carreg." },
-  { chave: "frete", rotulo: "Frete" },
+  { chave: 'pedido', rotulo: 'Pedido' },
+  { chave: 'cliente', rotulo: 'Cliente' },
+  { chave: 'placa', rotulo: 'Placa' },
+  { chave: 'doca', rotulo: 'Doca' },
+  { chave: 'programado', rotulo: 'Programado' },
+  { chave: 'chegada', rotulo: 'Chegada' },
+  { chave: 'inicioCarregamento', rotulo: 'Iní. Carreg.' },
+  { chave: 'fimCarregamento', rotulo: 'Fim Carreg.' },
+  { chave: 'frete', rotulo: 'Frete' },
 ];
 
 function TabelaCarregamentos({ carregamentos, carregando }) {
   const [carregamentoSelecionado, setCarregamentoSelecionado] = useState(null);
-  const [ordenacao, setOrdenacao] = useState({ coluna: null, direcao: "asc" });
+  const [ordenacao, setOrdenacao] = useState({ coluna: null, direcao: 'asc' });
 
   function handleConfirmar(doca) {
     console.log(`${carregamentoSelecionado.placa} chamado para a ${doca}`);
@@ -26,11 +27,11 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
   function handleOrdenar(chave) {
     setOrdenacao((atual) => {
       if (atual.coluna !== chave) {
-        return { coluna: chave, direcao: "asc" };
+        return { coluna: chave, direcao: 'asc' };
       } else {
         return {
           coluna: chave,
-          direcao: atual.direcao === "asc" ? "desc" : "asc",
+          direcao: atual.direcao === 'asc' ? 'desc' : 'asc',
         };
       }
     });
@@ -39,13 +40,13 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
   const carregamentosOrdenados = [...carregamentos].sort((a, b) => {
     if (!ordenacao.coluna) return 0;
 
-    const valorA = a[ordenacao.coluna] ?? "";
-    const valorB = b[ordenacao.coluna] ?? "";
+    const valorA = a[ordenacao.coluna] ?? '';
+    const valorB = b[ordenacao.coluna] ?? '';
     const resultado = String(valorA).localeCompare(String(valorB), undefined, {
       numeric: true,
     });
 
-    return ordenacao.direcao === "asc" ? resultado : -resultado;
+    return ordenacao.direcao === 'asc' ? resultado : -resultado;
   });
 
   return (
@@ -60,7 +61,11 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
                 {col.rotulo}
                 {ordenacao.coluna === col.chave && (
                   <span className="icone-ordenacao">
-                    {ordenacao.direcao === "asc" ? " ▲" : " ▼"}
+                    {ordenacao.direcao === 'asc' ? (
+                      <ArrowUp size={12} />
+                    ) : (
+                      <ArrowDown size={12} />
+                    )}
                   </span>
                 )}
               </th>

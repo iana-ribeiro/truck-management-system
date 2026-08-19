@@ -1,6 +1,7 @@
-import "./StepIndicator.css";
+import { Check } from 'lucide-react';
+import './StepIndicator.css';
 
-const etapas = ["Identificação", "Conferência", "Confirmação"];
+const etapas = ['Identificação', 'Conferência', 'Confirmação'];
 
 function StepIndicator({ etapaAtual }) {
   return (
@@ -14,10 +15,10 @@ function StepIndicator({ etapaAtual }) {
           <div key={etapa} className="step-indicator__item">
             <div
               className={`step-indicator__bolha ${
-                completa ? "step-indicator__bolha--completa" : ""
-              } ${ativa ? "step-indicator__bolha--ativa" : ""}`}
+                completa ? 'step-indicator__bolha--completa' : ''
+              } ${ativa ? 'step-indicator__bolha--ativa' : ''}`}
             >
-              {completa ? "✓" : numero}
+              {completa ? <Check size={14} /> : numero}
             </div>
 
             <span className="step-indicator__rotulo">{etapa}</span>

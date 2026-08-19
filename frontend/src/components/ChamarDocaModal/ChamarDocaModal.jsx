@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 import './ChamarDocaModal.css';
 
 const docasDisponiveis = ['Doca 1', 'Doca 2', 'Doca 3', 'Doca 4'];
 
-function ChamarDocaModal({ carregamento, carregamentos, onFechar, onConfirmar }) {
+function ChamarDocaModal({
+  carregamento,
+  carregamentos,
+  onFechar,
+  onConfirmar,
+}) {
   const [doca, setDoca] = useState('');
 
   useEffect(() => {
@@ -22,21 +28,30 @@ function ChamarDocaModal({ carregamento, carregamentos, onFechar, onConfirmar })
         <div className="modal-cabecalho">
           <div>
             <h2>Chamar para doca</h2>
-            <p>{carregamento.cliente} · {carregamento.placa}</p>
+            <p>
+              {carregamento.cliente} · {carregamento.placa}
+            </p>
           </div>
 
-          <button className="modal-fechar" onClick={onFechar}>×</button>
+          <button className="modal-fechar" onClick={onFechar}>
+            <X size={18} />
+          </button>
         </div>
 
         <div className="modal-corpo">
           <label htmlFor="doca">Doca</label>
-          <select id="doca" value={doca} onChange={(e) => setDoca(e.target.value)}>
+          <select
+            id="doca"
+            value={doca}
+            onChange={(e) => setDoca(e.target.value)}
+          >
             <option value="">Selecione a doca</option>
             {docasDisponiveis.map((d) => {
               const ocupada = docasOcupadas.includes(d);
               return (
                 <option key={d} value={d} disabled={ocupada}>
-                  {d}{ocupada ? ' — ocupada' : ''}
+                  {d}
+                  {ocupada ? ' — ocupada' : ''}
                 </option>
               );
             })}
@@ -44,15 +59,17 @@ function ChamarDocaModal({ carregamento, carregamentos, onFechar, onConfirmar })
         </div>
 
         <div className="modal-rodape">
-  <button className="botao botao--secundario" onClick={onFechar}>Cancelar</button>
-  <button
-    className="botao botao--primario"
-    disabled={!doca}
-    onClick={() => onConfirmar(doca)}
-  >
-    Confirmar
-  </button>
-</div>
+          <button className="botao botao--secundario" onClick={onFechar}>
+            Cancelar
+          </button>
+          <button
+            className="botao botao--primario"
+            disabled={!doca}
+            onClick={() => onConfirmar(doca)}
+          >
+            Confirmar
+          </button>
+        </div>
       </div>
     </div>
   );

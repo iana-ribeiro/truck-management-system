@@ -19,8 +19,8 @@
 
 .tabela-carregamentos th {
   text-align: left;
-  padding: 12px 16px;
-  font-size: var(--fonte-xs);
+  padding: 10px 14px;
+  font-size: var(--fonte-2xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -39,8 +39,8 @@
 }
 
 .tabela-carregamentos td {
-  padding: 14px 16px;
-  font-size: var(--fonte-sm);
+  padding: 11px 14px;
+  font-size: var(--fonte-xs);
   color: var(--cor-texto);
   border-bottom: 1px solid var(--cor-borda);
 }

@@ -18,6 +18,8 @@
   --fonte-texto: 'Inter', sans-serif;
 
   /* Escala de tamanhos de fonte */
+  /* Escala de tamanhos de fonte */
+  --fonte-2xs: 0.6875rem;
   --fonte-xs: 0.75rem;
   --fonte-sm: 0.875rem;
   --fonte-base: 1rem;

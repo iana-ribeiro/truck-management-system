@@ -1,0 +1,129 @@
+.conferencia__cabecalho {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.conferencia__cabecalho h1 {
+  font-size: var(--fonte-xl);
+  color: var(--cor-texto);
+  margin-bottom: 4px;
+}
+
+.conferencia__cabecalho p {
+  font-size: var(--fonte-sm);
+  color: var(--cor-texto-secundario);
+}
+
+.conferencia {
+  margin-top: 8px;
+}
+
+.conferencia__abas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--cor-borda);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.conferencia__aba {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  font-size: var(--fonte-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.conferencia__aba:hover {
+  background-color: var(--cor-borda);
+}
+
+.conferencia__aba--ativa {
+  background-color: var(--cor-primaria);
+  color: white;
+}
+
+.conferencia__check {
+  font-size: 0.7em;
+}
+
+.conferencia__conteudo {
+  background-color: var(--cor-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 24px;
+  min-height: 220px;
+}
+
+.conferencia__campos {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.conferencia__linha {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.conferencia__em-construcao {
+  color: var(--cor-texto-secundario);
+  font-size: var(--fonte-sm);
+  font-style: italic;
+}
+
+.conferencia__acoes {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.conferencia__botao-continuar {
+  flex: 1;
+}
+
+.campo {
+  margin-bottom: 16px;
+}
+
+.campo label {
+  display: block;
+  font-size: var(--fonte-sm);
+  font-weight: 500;
+  color: var(--cor-texto);
+  margin-bottom: 6px;
+}
+
+.campo input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  font-size: var(--fonte-sm);
+  color: var(--cor-texto);
+  background-color: var(--cor-card);
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.campo input:focus {
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.campo__obrigatorio {
+  color: #dc2626;
+}

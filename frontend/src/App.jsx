@@ -4,12 +4,13 @@ import {
   Route,
   Navigate,
   Outlet,
-} from "react-router-dom"; // Importando os componentes necessários do React Router para navegação entre páginas.
-import Sidebar from "./components/Sidebar/Sidebar";
-import Carregamentos from "./pages/Carregamentos";
-import Checkin from "./pages/Checkin/Checkin";
-import Identificacao from "./pages/Checkin/Identificacao";
-import "./App.css";
+} from 'react-router-dom'; // Importando os componentes necessários do React Router para navegação entre páginas.
+import Sidebar from './components/Sidebar/Sidebar';
+import Carregamentos from './pages/Carregamentos';
+import Checkin from './pages/Checkin/Checkin';
+import Identificacao from './pages/Checkin/Identificacao';
+import Conferencia from './pages/Checkin/Conferencia';
+import './App.css';
 
 function LayoutPrincipal() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/checkin" element={<Checkin />}>
           <Route index element={<Navigate to="identificacao" replace />} />
           <Route path="identificacao" element={<Identificacao />} />
+          <Route path="conferencia" element={<Conferencia />} />
         </Route>
       </Routes>
     </BrowserRouter>
