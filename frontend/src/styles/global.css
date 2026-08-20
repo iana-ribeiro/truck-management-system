@@ -1,6 +1,13 @@
+/* "Reset" global: cada navegador tem um estilo padrão levemente
+   diferente para margens, fontes, etc. Este arquivo zera essas
+   diferenças para que o site pareça igual em qualquer navegador. */
+
 * {
     margin: 0;
     padding: 0;
+    /* box-sizing: border-box faz o padding e a borda de um elemento
+       contarem DENTRO da largura/altura definida, e não somarem a mais
+       — evita surpresas de tamanho ao estilizar componentes. */
     box-sizing: border-box;
 }
 
@@ -14,6 +21,9 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--fonte-titulo);
 }
 
+/* Sem isso, botões e campos de formulário usam a fonte padrão do
+   sistema operacional em vez da fonte do site — "font: inherit" faz
+   eles herdarem a mesma fonte do restante da página. */
 button, input {
     font: inherit;
 }

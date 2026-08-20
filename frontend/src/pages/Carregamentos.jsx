@@ -1,49 +1,53 @@
 import { useEffect, useState } from "react";
-import BarraPesquisa from "../components/BarraPesquisa/BarraPesquisa"; // Traz o componente da barra de pesquisa.
-import Header from "../components/Header/Header"; // Traz o componente do cabeçalho da página.
-import Layout from "../components/Layout/Layout"; // Traz o componente do layout da página.
-import StatusCard from "../components/StatusCards/StatusCards"; // Traz o componente dos cards de status.
-import TabelaCarregamentos from "../components/TabelaCarregamentos/TabelaCarregamentos"; // Traz o componente da tabela.
-import { buscarCarregamentos } from "../services/carregamentos"; // Traz a função que busca os carregamentos na API.
+import BarraPesquisa from "../components/BarraPesquisa/BarraPesquisa";
+import Header from "../components/Header/Header";
+import Layout from "../components/Layout/Layout";
+import StatusCard from "../components/StatusCards/StatusCards";
+import TabelaCarregamentos from "../components/TabelaCarregamentos/TabelaCarregamentos";
+import { buscarCarregamentos } from "../services/carregamentos";
 import "./Carregamentos.css";
 
-// useState = "React, vou usar memória."
-
-// useEffect = "Execute este código quando alguma coisa acontecer." Executa quando o React decide que é a hora (por exemplo, ao abrir a página).
-
+// Esta é a página principal do sistema: mostra os cartões de totais, a
+// barra de busca e a tabela com os carregamentos do dia. Ela é a "dona"
+// dos dados — busca tudo no backend e distribui para os componentes
+// filhos (StatusCard, BarraPesquisa, TabelaCarregamentos) através de props.
 function Carregamentos() {
-  const [carregamentos, setCarregamentos] = useState([]); // carregamentos = Guarda os dados da tabela. setCarregamentos = É a função que altera essa variável. Analogia com o controle remoto.
-  const [pesquisa, setPesquisa] = useState(""); // pesquisa = Guarda o que o usuário digitou. setPesquisa = É a função que altera essa variável.
-  const [carregando, setCarregando] = useState(true); // carregando = Guarda se a página está carregando. setCarregando = É a função que altera essa variável.
-  const [erro, setErro] = useState(""); // erro = Guarda se houve algum erro. setErro = É a função que altera essa variável.
+  const [carregamentos, setCarregamentos] = useState([]); // lista completa vinda do backend
+  const [pesquisa, setPesquisa] = useState(""); // texto digitado na barra de busca
+  const [carregando, setCarregando] = useState(true); // true enquanto espera a resposta do backend
+  const [erro, setErro] = useState(""); // mensagem de erro, se o pedido ao backend falhar
 
-  // Execute o código depois que a página foi renderizada. Busque os carregamentos na API.
-
+  // Busca os carregamentos no backend e guarda no estado da página.
+  // Fica numa função separada (em vez de direto no useEffect) porque
+  // o botão "Atualizar" da BarraPesquisa também precisa poder chamá-la.
   async function carregarDados() {
-    // Essa função organiza o processo. "Vou buscar os dados (1) e depois colocá-los no estado (2)."
     try {
-      setCarregando(true); // A página está carregando.
+      setCarregando(true);
+      setErro("");
 
-      setErro(""); // Limpa a mensagem de erro.
+      const dados = await buscarCarregamentos();
 
-      const dados = await buscarCarregamentos(); // (1) Conversa com a API.
-
-      setCarregamentos(dados); //(2) Guarda os dados no estado da página.
+      setCarregamentos(dados);
     } catch (error) {
-      console.error(error); // Mostra o erro real no console, pra facilitar debug no futuro.
+      console.error(error); // ajuda a investigar o problema no console do navegador
       setErro("Erro ao buscar os carregamentos. Tente novamente mais tarde.");
     } finally {
-      setCarregando(false); // A página terminou de carregar.
+      // "finally" roda tanto se deu certo quanto se deu erro — por isso
+      // é o lugar certo para desligar o "carregando".
+      setCarregando(false);
     }
   }
 
+  // useEffect com array vazio "[]" no final significa: "rode isso só uma
+  // vez, assim que a página for exibida pela primeira vez."
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     carregarDados();
   }, []);
 
-  // Calcula os totais para exibir nos cards de status.
-
+  // Totais mostrados nos cartões do topo. São recalculados a cada
+  // renderização a partir da lista "carregamentos" — não precisam de
+  // useState próprio porque são só uma "leitura" dos dados que já existem.
   const totalDoDia = carregamentos.length;
   const aguardandoNaFila = carregamentos.filter(
     (c) => c.status === "Aguardando na fila",
@@ -55,17 +59,14 @@ function Carregamentos() {
     (c) => c.status === "Concluído",
   ).length;
 
-  const textoPesquisa = pesquisa.toLowerCase(); // Converte o texto digitado para minúsculo.
-
-  // Filtra os carregamentos de acordo com o texto digitado na barra de pesquisa. Verifica se o texto digitado está contido no pedido ou no cliente.
-
+  // Filtra a lista pelo texto digitado na busca, comparando pedido e
+  // cliente sem diferenciar maiúsculas de minúsculas.
+  const textoPesquisa = pesquisa.toLowerCase();
   const carregamentosFiltrados = carregamentos.filter(
     (c) =>
       c.pedido.toLowerCase().includes(textoPesquisa) ||
       c.cliente.toLowerCase().includes(textoPesquisa),
   );
-
-  // Devolve a interface da página.
 
   return (
     <>
@@ -105,6 +106,8 @@ function Carregamentos() {
           onAtualizar={carregarDados}
         />
 
+        {/* Se deu erro, mostra a mensagem no lugar da tabela — não faz
+            sentido tentar exibir uma tabela sem dados confiáveis. */}
         {erro ? (
           <p>{erro}</p>
         ) : (

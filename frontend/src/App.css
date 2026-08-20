@@ -1,9 +1,12 @@
+/* Estilo da moldura usada pelas páginas internas (veja LayoutPrincipal
+   em App.jsx): coloca a Sidebar e o conteúdo da página lado a lado. */
+
 .app-shell {
-  display: flex;
-  min-height: 100vh;
+  display: flex; /* Sidebar e conteúdo ficam um do lado do outro */
+  min-height: 100vh; /* ocupa a altura inteira da tela, mesmo com pouco conteúdo */
 }
 
 .app-conteudo {
-  flex: 1;
-  min-width: 0;
+  flex: 1; /* o conteúdo ocupa todo o espaço que sobrar ao lado da Sidebar */
+  min-width: 0; /* evita que tabelas largas "estourem" o layout */
 }

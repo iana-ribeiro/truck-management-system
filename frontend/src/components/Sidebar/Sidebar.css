@@ -1,3 +1,5 @@
+/* Estilo do menu lateral (componente Sidebar.jsx). As classes com "__"
+   seguem o padrão BEM: sidebar__algo é "uma parte de dentro da sidebar". */
 .sidebar {
   width: 240px;
   flex-shrink: 0;
@@ -67,6 +69,8 @@
   color: #f1f5f9;
 }
 
+/* Aplicada só no item do menu cuja rota bate com a URL atual
+   (a lógica que decide isso fica em Sidebar.jsx, usando useLocation). */
 .sidebar__item--ativo {
   background-color: var(--cor-primaria);
   color: white;

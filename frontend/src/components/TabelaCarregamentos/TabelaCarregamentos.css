@@ -1,3 +1,5 @@
+/* Estilo da tabela de carregamentos e das linhas "esqueleto" mostradas
+   enquanto os dados ainda estão sendo buscados no backend. */
 .tabela-container {
   background-color: var(--cor-card);
   border-radius: 12px;

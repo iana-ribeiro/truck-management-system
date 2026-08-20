@@ -1,3 +1,5 @@
+/* Estilo da barra de progresso do check-in (componente StepIndicator.jsx):
+   bolinhas numeradas ligadas por uma linha, indicando a etapa atual. */
 .step-indicator {
   display: flex;
   align-items: center;

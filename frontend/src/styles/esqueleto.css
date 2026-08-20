@@ -1,3 +1,11 @@
+/* "Esqueleto" é o nome do padrão visual usado para indicar que algo
+   ainda está carregando: em vez de mostrar a tela vazia ou um texto
+   "carregando...", mostramos blocos cinzas no formato aproximado do
+   conteúdo real, piscando suavemente. É usado nos cartões de status e
+   na tabela de carregamentos enquanto os dados não chegam do backend. */
+
+/* Define a animação de "piscar": o elemento vai ficando mais
+   transparente e depois volta ao normal, repetindo para sempre. */
 @keyframes esqueleto-pulso {
   0%,
   100% {

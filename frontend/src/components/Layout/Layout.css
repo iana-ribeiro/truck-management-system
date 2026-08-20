@@ -1,5 +1,7 @@
+/* Limita a largura do conteúdo e centraliza na tela, para não ficar
+   esticado demais em monitores grandes. Usado pelo componente Layout.jsx. */
 .layout {
   max-width: 1400px;
-  margin: 0 auto;
-  padding: 24px;
+  margin: 0 auto; /* centraliza horizontalmente */
+  padding: 24px; /* espaço entre o conteúdo e a borda da tela */
 }

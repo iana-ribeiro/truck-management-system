@@ -1,3 +1,5 @@
+/* Estilo do modal "Chamar para doca" (componente ChamarDocaModal.jsx).
+   .modal-fundo é a camada escura atrás; .modal-caixa é a janela branca. */
 .modal-fundo {
   position: fixed;
   inset: 0;

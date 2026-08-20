@@ -1,3 +1,8 @@
+/* Este arquivo define "variáveis" de CSS (também chamadas de design
+   tokens): valores de cor, fonte e tamanho com um nome, reaproveitados
+   em todo o projeto através de var(--nome-da-variavel). A vantagem é
+   que, para mudar a cor principal do site inteiro, basta editar UMA
+   linha aqui, em vez de procurar cada lugar que usa aquele azul. */
 :root {
   /* Cores base */
   --cor-fundo: #f8fafc;
@@ -7,7 +12,7 @@
   --cor-texto: #0f172a;
   --cor-texto-secundario: #64748b;
 
-  /* Cores da sidebar */
+  /* Cores da sidebar (menu lateral escuro, veja components/Sidebar) */
   --cor-sidebar-fundo: #0f172a;
   --cor-sidebar-hover: #1e293b;
   --cor-sidebar-texto: #94a3b8;
@@ -17,8 +22,7 @@
   --fonte-titulo: 'Archivo', sans-serif;
   --fonte-texto: 'Inter', sans-serif;
 
-  /* Escala de tamanhos de fonte */
-  /* Escala de tamanhos de fonte */
+  /* Escala de tamanhos de fonte: do menor (2xs) ao maior (xl) */
   --fonte-2xs: 0.6875rem;
   --fonte-xs: 0.75rem;
   --fonte-sm: 0.875rem;

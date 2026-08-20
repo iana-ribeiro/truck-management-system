@@ -1,3 +1,5 @@
+/* Estilos da etapa 2 do check-in (Conferencia.jsx): cabeçalho, abas
+   (Motorista/Veículo/Vistoria/Confirmações) e os campos do formulário. */
 .conferencia__cabecalho {
   text-align: center;
   margin-bottom: 20px;
@@ -62,7 +64,10 @@
   border: 1px solid var(--cor-borda);
   border-radius: 12px;
   padding: 24px;
-  min-height: 220px;
+  /* Fixo (não só um mínimo) e alto o bastante pra caber a aba mais cheia
+     (Veículo). Assim a caixa não muda de tamanho ao trocar de aba — as
+     abas mais curtas (Vistoria, Confirmações) só ficam com espaço sobrando. */
+  min-height: 380px;
 }
 
 .conferencia__campos {
@@ -75,6 +80,71 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+}
+
+/* Bloco de resumo somente-leitura mostrado no topo da aba Veículo (dados
+   que já vieram da etapa de Identificação). */
+.conferencia__resumo {
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.conferencia__resumo-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  font-size: var(--fonte-sm);
+}
+
+/* Desenha a linha divisória só ENTRE as linhas do resumo, nunca antes da
+   primeira nem depois da última. */
+.conferencia__resumo-linha + .conferencia__resumo-linha {
+  border-top: 1px solid var(--cor-borda);
+}
+
+.conferencia__resumo-rotulo {
+  color: var(--cor-texto-secundario);
+}
+
+.conferencia__resumo-valor {
+  font-weight: 600;
+  color: var(--cor-texto);
+}
+
+/* Grupo de opções em formato de pílula usado dentro do formulário (ex:
+   tipo de operação, tipo de veículo) — mesma ideia visual das abas lá
+   em cima, só que em tamanho menor. Veja o componente Chip em Conferencia.jsx. */
+.conferencia__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.conferencia__chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--cor-borda);
+  background-color: var(--cor-card);
+  color: var(--cor-texto-secundario);
+  font-size: var(--fonte-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.conferencia__chip:hover {
+  border-color: var(--cor-texto-secundario);
+}
+
+.conferencia__chip--ativo {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: white;
 }
 
 .conferencia__em-construcao {

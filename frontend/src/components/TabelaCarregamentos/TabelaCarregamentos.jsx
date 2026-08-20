@@ -3,6 +3,11 @@ import { ArrowUp, ArrowDown } from 'lucide-react';
 import ChamarDocaModal from '../ChamarDocaModal/ChamarDocaModal';
 import './TabelaCarregamentos.css';
 
+// Define quais colunas existem na tabela e em que ordem aparecem.
+// "chave" precisa bater com o nome do campo que vem da API (veja
+// carregamentosService.mock.js no backend); "rotulo" é o texto exibido
+// no cabeçalho. Ter isso numa lista só, em vez de escrever cada <th> e
+// <td> na mão, evita repetir código e facilita adicionar/remover colunas.
 const colunas = [
   { chave: 'pedido', rotulo: 'Pedido' },
   { chave: 'cliente', rotulo: 'Cliente' },
@@ -16,19 +21,31 @@ const colunas = [
 ];
 
 function TabelaCarregamentos({ carregamentos, carregando }) {
+  // Guarda qual linha da tabela está com o modal "Chamar para doca"
+  // aberto. Quando ninguém foi selecionado, fica null.
   const [carregamentoSelecionado, setCarregamentoSelecionado] = useState(null);
+
+  // Guarda por qual coluna a tabela está ordenada agora, e em qual
+  // direção (crescente/decrescente). Ex: { coluna: 'cliente', direcao: 'asc' }.
   const [ordenacao, setOrdenacao] = useState({ coluna: null, direcao: 'asc' });
 
   function handleConfirmar(doca) {
+    // Por enquanto só mostra no console — futuramente aqui entraria a
+    // chamada para o backend avisando que o motorista foi chamado.
     console.log(`${carregamentoSelecionado.placa} chamado para a ${doca}`);
-    setCarregamentoSelecionado(null);
+    setCarregamentoSelecionado(null); // fecha o modal
   }
 
+  // Roda quando o usuário clica no cabeçalho de uma coluna.
   function handleOrdenar(chave) {
     setOrdenacao((atual) => {
+      // Clicou numa coluna diferente da que já estava ordenada:
+      // começa ordenando essa nova coluna em ordem crescente.
       if (atual.coluna !== chave) {
         return { coluna: chave, direcao: 'asc' };
       } else {
+        // Clicou de novo na mesma coluna: inverte a direção
+        // (crescente vira decrescente e vice-versa).
         return {
           coluna: chave,
           direcao: atual.direcao === 'asc' ? 'desc' : 'asc',
@@ -37,11 +54,15 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
     });
   }
 
+  // Cria uma cópia ordenada da lista de carregamentos, sem alterar a
+  // lista original recebida por props (por isso o "[...carregamentos]").
   const carregamentosOrdenados = [...carregamentos].sort((a, b) => {
-    if (!ordenacao.coluna) return 0;
+    if (!ordenacao.coluna) return 0; // nenhuma coluna escolhida: mantém a ordem original
 
     const valorA = a[ordenacao.coluna] ?? '';
     const valorB = b[ordenacao.coluna] ?? '';
+    // localeCompare compara texto "como gente lê" (ex: coloca "10" antes
+    // de "9" quando numeric: true, e ignora maiúsculas/minúsculas).
     const resultado = String(valorA).localeCompare(String(valorB), undefined, {
       numeric: true,
     });
@@ -59,6 +80,8 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
             {colunas.map((col) => (
               <th key={col.chave} onClick={() => handleOrdenar(col.chave)}>
                 {col.rotulo}
+                {/* A setinha só aparece na coluna que está sendo usada
+                    para ordenar no momento. */}
                 {ordenacao.coluna === col.chave && (
                   <span className="icone-ordenacao">
                     {ordenacao.direcao === 'asc' ? (
@@ -76,6 +99,8 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
 
         <tbody>
           {carregando ? (
+            // Enquanto os dados não chegaram, desenha 5 linhas "fantasma"
+            // com blocos cinzas piscando, no lugar dos dados reais.
             Array.from({ length: 5 }).map((_, indice) => (
               <tr key={`esqueleto-${indice}`}>
                 {colunas.map((col) => (
@@ -105,6 +130,7 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
               </tr>
             ))
           ) : (
+            // Nem carregando, nem com resultados: a busca não encontrou nada.
             <tr>
               <td colSpan="10" className="sem-dados">
                 Nenhum carregamento encontrado.
@@ -114,6 +140,8 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
         </tbody>
       </table>
 
+      {/* O modal fica sempre "montado" aqui; ele mesmo decide não
+          mostrar nada quando "carregamento" é null (veja ChamarDocaModal.jsx). */}
       <ChamarDocaModal
         carregamento={carregamentoSelecionado}
         carregamentos={carregamentos}

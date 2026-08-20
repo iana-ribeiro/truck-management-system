@@ -1,3 +1,4 @@
+/* Estilo do cabeçalho de topo mostrado no componente Header.jsx. */
 .header {
   background-color: var(--cor-card);
   border-bottom: 1px solid var(--cor-borda);

@@ -1,3 +1,6 @@
+/* Estilo dos cartões de totais no topo da página de Carregamentos
+   (componente StatusCards.jsx). As classes "-esqueleto" no fim do
+   arquivo são usadas só enquanto os dados ainda estão carregando. */
 .status-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

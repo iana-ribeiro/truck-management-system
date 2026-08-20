@@ -1,3 +1,5 @@
+/* Fundo em tela cheia do fluxo de check-in, sem a Sidebar do sistema
+   interno (veja Checkin.jsx: essa rota fica fora do LayoutPrincipal). */
 .checkin-tela {
   min-height: 100vh;
   padding: 40px 24px;
@@ -8,4 +10,11 @@
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
+}
+
+/* Aplicada só na etapa de Conferência (veja Checkin.jsx), que tem abas e
+   campos lado a lado e por isso precisa de mais espaço horizontal do
+   que o formulário simples da Identificação. */
+.checkin-container--largo {
+  max-width: 768px;
 }

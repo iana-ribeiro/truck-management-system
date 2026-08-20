@@ -1,3 +1,4 @@
+/* Estilo do campo de busca (componente BarraPesquisa.jsx). */
 .barra-pesquisa {
   display: flex;
   justify-content: flex-end;

@@ -1,6 +1,13 @@
 import "./StatusCards.css";
 
+// Um "cartão" com um número e um rótulo (ex: "12 — Aguardando na Fila").
+// A página Carregamentos.jsx renderiza vários StatusCard, um para cada
+// total que ela já calculou (total do dia, na fila, em carregamento...).
+// "cor" só muda a cor da bolinha, pra diferenciar visualmente os cards.
 function StatusCard({ titulo, valor, cor, carregando }) {
+  // Enquanto os dados ainda não chegaram do backend, mostramos um
+  // "esqueleto" (blocos cinzas piscando) no lugar do número real, pra
+  // indicar visualmente que algo está sendo carregado.
   if (carregando) {
     return (
       <div className="status-card">

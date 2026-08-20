@@ -1,3 +1,8 @@
+/* Estilos padrão dos botões do sistema. "botao--primario" é o botão de
+   destaque (ações principais, em azul); "botao--secundario" é o botão
+   neutro (ex: "Cancelar"); "botao--compacto" é uma versão menor, usada
+   dentro da tabela de carregamentos. Combinar duas classes, como
+   "botao botao--primario", é o que dá o visual completo do botão. */
 .botao {
   padding: 8px 16px;
   border-radius: 8px;

@@ -1,3 +1,6 @@
+/* Estilos específicos da página de Carregamentos (pages/Carregamentos.jsx).
+   O visual dos cartões, busca e tabela vem dos próprios componentes;
+   aqui fica só o que sobra, como a área de ações no fim da página. */
 .acoes {
   display: flex;
   justify-content: flex-end;
