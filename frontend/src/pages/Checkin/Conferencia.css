@@ -64,10 +64,30 @@
   border: 1px solid var(--cor-borda);
   border-radius: 12px;
   padding: 24px;
-  /* Fixo (não só um mínimo) e alto o bastante pra caber a aba mais cheia
-     (Veículo). Assim a caixa não muda de tamanho ao trocar de aba — as
-     abas mais curtas (Vistoria, Confirmações) só ficam com espaço sobrando. */
-  min-height: 380px;
+  display: grid;
+}
+
+/* As quatro abas do formulário (Conferencia.jsx) ficam todas montadas
+   ao mesmo tempo, ocupando a MESMA célula do grid (grid-area: 1 / 1
+   sobrepõe todas no mesmo lugar). Isso faz a altura da caixa se ajustar
+   sozinha à aba com mais conteúdo — sem "chutar" um valor fixo em
+   pixels que quebra assim que o texto de alguma aba mudar. A aba
+   inativa some da tela com "visibility: hidden" (não "display: none"):
+   ela continua ocupando espaço no grid, e é exatamente isso que garante
+   que a caixa não encolha ao trocar pra uma aba mais curta. */
+.conferencia__painel {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  /* "stretch" (padrão do grid) já faz o painel preencher a altura toda
+     da célula — aqui só viramos ele um flex column pra dar pros filhos
+     (ex: .conferencia__regras) a possibilidade de usar essa altura pra
+     empurrar algo pro final, em vez de só herdar a altura de conteúdo. */
+  display: flex;
+  flex-direction: column;
+}
+
+.conferencia__painel--ativo {
+  visibility: visible;
 }
 
 .conferencia__campos {
@@ -80,37 +100,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-}
-
-/* Bloco de resumo somente-leitura mostrado no topo da aba Veículo (dados
-   que já vieram da etapa de Identificação). */
-.conferencia__resumo {
-  border: 1px solid var(--cor-borda);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.conferencia__resumo-linha {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  font-size: var(--fonte-sm);
-}
-
-/* Desenha a linha divisória só ENTRE as linhas do resumo, nunca antes da
-   primeira nem depois da última. */
-.conferencia__resumo-linha + .conferencia__resumo-linha {
-  border-top: 1px solid var(--cor-borda);
-}
-
-.conferencia__resumo-rotulo {
-  color: var(--cor-texto-secundario);
-}
-
-.conferencia__resumo-valor {
-  font-weight: 600;
-  color: var(--cor-texto);
 }
 
 /* Grupo de opções em formato de pílula usado dentro do formulário (ex:
@@ -147,10 +136,87 @@
   color: white;
 }
 
-.conferencia__em-construcao {
-  color: var(--cor-texto-secundario);
+/* Componente ListaDeRegras (Conferencia.jsx), usado tanto na aba
+   Requisitos quanto na aba Normas de Segurança: lista de regras em
+   texto, seguida de uma única pergunta de concordância (RespostaToggle).
+   "flex: 1" faz preencher a altura toda do painel (que já é sempre a
+   mesma nas quatro abas — veja .conferencia__painel), e
+   "justify-content: space-between" empurra a pergunta pro final da
+   caixa, mesmo quando a lista é mais curta (como em Normas de
+   Segurança, com 9 itens contra os 11 de Requisitos). */
+.conferencia__regras {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.conferencia__regras-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
   font-size: var(--fonte-sm);
-  font-style: italic;
+  color: var(--cor-texto);
+}
+
+/* Trecho de explicação mais longa dentro do próprio item da lista (ex:
+   as medidas do Forro) — mesma linha do título, só que em cor mais fraca. */
+.conferencia__regras-detalhe {
+  color: var(--cor-texto-secundario);
+}
+
+/* Linha final com a pergunta de concordância e o RespostaToggle
+   Concordo/Não concordo, separada da lista por uma borda. */
+.conferencia__regras-resposta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--cor-borda);
+  padding-top: 16px;
+  font-size: var(--fonte-sm);
+  font-weight: 500;
+  color: var(--cor-texto);
+}
+
+/* Par de botões "Sim"/"Não" de cada item (componente RespostaToggle em
+   Conferencia.jsx). Visual parecido com o dos chips acima, mas cada
+   botão vira uma cor diferente quando selecionado. */
+.conferencia__resposta {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.conferencia__resposta-botao {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 999px;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  font-size: var(--fonte-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+
+.conferencia__resposta-botao:hover {
+  background-color: var(--cor-borda);
+}
+
+.conferencia__resposta-botao--sim.conferencia__resposta-botao--ativo {
+  background-color: #10b981;
+  color: white;
+}
+
+.conferencia__resposta-botao--nao.conferencia__resposta-botao--ativo {
+  background-color: #dc2626;
+  color: white;
 }
 
 .conferencia__acoes {
@@ -192,6 +258,15 @@
 .campo input:focus {
   border-color: var(--cor-primaria);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Campo travado: veio pronto da etapa de Identificação (ex: CPF) e não
+   pode ser alterado aqui na Conferência — visual "apagado" deixa isso
+   claro pro motorista, em vez de simplesmente ignorar cliques. */
+.campo input:disabled {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-secundario);
+  cursor: not-allowed;
 }
 
 .campo__obrigatorio {

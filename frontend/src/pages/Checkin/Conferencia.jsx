@@ -5,15 +5,13 @@ import StepIndicator from './components/StepIndicator/StepIndicator';
 import { carregarConferencia, salvarConferencia } from './checkinStorage';
 import './Conferencia.css';
 
-// Define as quatro abas do formulário de conferência. "Motorista" e
-// "Veículo" já estão implementadas de verdade; "Vistoria" e
-// "Confirmações" ainda mostram a mensagem "Em construção" (veja mais
-// abaixo no JSX) — serão implementadas nas próximas etapas.
+// Define as quatro abas do formulário de conferência. O "id" é usado
+// internamente (estado, chaves); o "rotulo" é só o texto mostrado.
 const abas = [
   { id: 'motorista', rotulo: 'Motorista' },
   { id: 'veiculo', rotulo: 'Veículo' },
-  { id: 'vistoria', rotulo: 'Vistoria' },
-  { id: 'confirmacoes', rotulo: 'Confirmações' },
+  { id: 'requisitos', rotulo: 'Requisitos' },
+  { id: 'confirmacoes', rotulo: 'Normas de Segurança' },
 ];
 
 // Opções fixas de escolha na aba Veículo, mostradas como "chips"
@@ -25,6 +23,57 @@ const tiposVeiculo = [
   'In loader',
   'Sider',
   'Container',
+];
+
+// Itens fixos de conferência da aba "Requisitos" — regras de segurança
+// que o motorista/carga precisam cumprir antes do carregamento. São só
+// texto (mostrados juntos, como uma lista de regras); o motorista não
+// responde item por item, só concorda ou não com a lista inteira (veja
+// conferencia.requisitos.aceite mais abaixo). "detalhe" é opcional:
+// usado só nos itens em que o critério tem uma medida ou explicação
+// mais longa, mostrado em fonte menor ao lado do título (ex: "Forro").
+const requisitosItens = [
+  { chave: 'tampasBicas', titulo: 'Tampas das bicas com proteções fechadas dentro da carroceria' },
+  { chave: 'lonaRasgada', titulo: 'Lona sem rasgos ou furos' },
+  { chave: 'lonaDobrada', titulo: 'Lona sem dobras dentro da carroceria' },
+  { chave: 'elasticos', titulo: 'Elásticos soltos entre as carretas e a parte frontal' },
+  { chave: 'correntes', titulo: 'Correntes da carroceria soltas' },
+  { chave: 'assoalho', titulo: 'Assoalho limpo, sem resíduos e sem danos' },
+  { chave: 'portas', titulo: 'Portas com os pinos devidamente travados' },
+  { chave: 'arcos', titulo: 'Arcos retirados guardados embaixo da carreta (fora da carroceria)' },
+  {
+    chave: 'forro',
+    titulo: 'Forro',
+    detalhe: 'Mínimo 2x4m por bloco a carregar, máximo 4x4m',
+  },
+  {
+    chave: 'pneus',
+    titulo: 'Condições dos pneus',
+    detalhe: 'Cheios, sem deformações ("barriga") ou malha exposta',
+  },
+  {
+    chave: 'sinalizacao',
+    titulo: 'Sinalização',
+    detalhe: 'Sistema de sinalização e alarme de ré funcionando corretamente',
+  },
+];
+
+// Mesma ideia de requisitosItens, mas para a aba "Normas de Segurança":
+// regras de conduta dentro da unidade (e não do veículo/carga).
+const normasSegurancaItens = [
+  { chave: 'subirCarroceria', titulo: 'Proibido subir na carroceria dos caminhões' },
+  { chave: 'epis', titulo: "Uso obrigatório dos EPI's: capacete, óculos de segurança e botina" },
+  {
+    chave: 'permanenciaMotorista',
+    titulo:
+      'O motorista deve permanecer na cabine durante o carregamento ou nas cadeiras de espera em frente à sala da nota fiscal',
+  },
+  { chave: 'faixaPedestre', titulo: 'Caso precise ir a pé até a portaria, utilize a faixa de pedestre' },
+  { chave: 'areaVidro', titulo: 'Proibido acessar a área de armazenagem do vidro e tocar no vidro' },
+  { chave: 'carroceriaLimpa', titulo: 'A carroceria deve estar limpa e organizada, sem materiais soltos' },
+  { chave: 'eletronicos', titulo: 'Proibido o uso de aparelhos eletrônicos durante a movimentação do veículo' },
+  { chave: 'guardian', titulo: 'Não é permitido acessar a Guardian com acompanhante' },
+  { chave: 'fumar', titulo: 'É proibido fumar nas dependências da empresa' },
 ];
 
 // Considera a aba "Motorista" completa quando os três campos
@@ -39,6 +88,15 @@ function motoristaCompleto(motorista) {
 // Mesma ideia da função acima, mas para os campos da aba "Veículo".
 function veiculoCompleto(veiculo) {
   return Boolean(veiculo.placa && veiculo.tipoOperacao && veiculo.tipoVeiculo);
+}
+
+// Mesma ideia, mas para as abas "Requisitos" e "Normas de Segurança":
+// ambas só têm uma resposta (concorda ou não com a lista inteira de
+// regras), então a mesma função serve pras duas. Só é considerada
+// completa quando o motorista CONCORDA — "Não concordo" não libera a
+// navegação, já que sem concordar ele não pode carregar.
+function listaDeRegrasCompleta(estado) {
+  return estado.aceite === 'sim';
 }
 
 // Botão em formato de pílula usado para escolher UMA opção dentro de uma
@@ -57,8 +115,71 @@ function Chip({ rotulo, ativo, onClick }) {
   );
 }
 
-// Segunda etapa do check-in: confirma e completa os dados do motorista
-// (e, no futuro, do veículo e da vistoria) antes de liberar o carregamento.
+// Par de botões pra escolher entre "sim" e "nao". Os rótulos são
+// customizáveis (rotuloSim/rotuloNao) porque o mesmo par de opções é
+// usado com textos diferentes dependendo do contexto — na aba
+// Requisitos, por exemplo, são "Concordo"/"Não concordo" em vez de
+// "Sim"/"Não".
+function RespostaToggle({ valor, onChange, rotuloSim = 'Sim', rotuloNao = 'Não' }) {
+  return (
+    <div className="conferencia__resposta">
+      <button
+        type="button"
+        className={`conferencia__resposta-botao conferencia__resposta-botao--sim ${
+          valor === 'sim' ? 'conferencia__resposta-botao--ativo' : ''
+        }`}
+        onClick={() => onChange('sim')}
+      >
+        {rotuloSim}
+      </button>
+      <button
+        type="button"
+        className={`conferencia__resposta-botao conferencia__resposta-botao--nao ${
+          valor === 'nao' ? 'conferencia__resposta-botao--ativo' : ''
+        }`}
+        onClick={() => onChange('nao')}
+      >
+        {rotuloNao}
+      </button>
+    </div>
+  );
+}
+
+// Lista de regras em texto (cada uma com "titulo" e, opcionalmente,
+// "detalhe") seguida de uma única pergunta de concordância. Usado tanto
+// na aba Requisitos quanto na aba Normas de Segurança — a estrutura
+// visual é idêntica nas duas, só mudam os itens e o texto da pergunta.
+function ListaDeRegras({ itens, pergunta, valor, onChange }) {
+  return (
+    <div className="conferencia__regras">
+      <ul className="conferencia__regras-lista">
+        {itens.map(({ chave, titulo, detalhe }) => (
+          <li key={chave}>
+            {titulo}
+            {/* "detalhe" só existe nos itens em que o critério tem uma
+                medida ou explicação mais longa (ex: "Forro"). */}
+            {detalhe && (
+              <span className="conferencia__regras-detalhe"> — {detalhe}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <div className="conferencia__regras-resposta">
+        <span>{pergunta}</span>
+        <RespostaToggle
+          valor={valor}
+          onChange={onChange}
+          rotuloSim="Concordo"
+          rotuloNao="Não concordo"
+        />
+      </div>
+    </div>
+  );
+}
+
+// Segunda etapa do check-in: confirma e completa os dados do motorista,
+// do veículo e os requisitos de segurança antes de liberar o carregamento.
 function Conferencia() {
   // dadosCheckin veio da etapa anterior (Identificacao.jsx), repassado
   // pelo componente pai Checkin.jsx através do Outlet.
@@ -73,24 +194,46 @@ function Conferencia() {
   // página no meio da Conferência) antes de cair no formulário vazio —
   // com o CPF do motorista já preenchido com o documento informado na
   // etapa 1, pra não pedir a mesma informação duas vezes.
-  const [conferencia, setConferencia] = useState(
-    () =>
-      carregarConferencia() ?? {
-        motorista: {
-          nomeCompleto: '',
-          cpf: dadosCheckin.documento,
-          cnhNumero: '',
-          telefoneContato: '',
-        },
-        veiculo: {
-          placa: '',
-          tipoOperacao: '',
-          tipoVeiculo: '',
-        },
-        vistoria: {},
-        confirmacoes: {},
+  const [conferencia, setConferencia] = useState(() => {
+    const padrao = {
+      motorista: {
+        nomeCompleto: '',
+        // Vem pronto da etapa de Identificação e fica travado (input
+        // disabled no JSX) — não faz sentido o motorista mudar o CPF
+        // aqui depois de já ter se identificado com ele.
+        cpf: dadosCheckin.documento,
+        cnhNumero: '',
+        telefoneContato: '',
       },
-  );
+      veiculo: {
+        placa: '',
+        tipoOperacao: '',
+        tipoVeiculo: '',
+      },
+      // "aceite" guarda a resposta única ("sim"/"nao") de concordância
+      // com toda a lista de itens da aba — sem resposta ainda, fica
+      // como string vazia. Mesmo formato pras duas listas de regras
+      // (Requisitos e Normas de Segurança).
+      requisitos: { aceite: '' },
+      confirmacoes: { aceite: '' },
+    };
+
+    const salvo = carregarConferencia();
+    if (!salvo) return padrao;
+
+    // Mescla o que foi salvo por cima do padrão, aba por aba, em vez de
+    // usar "salvo" direto: se o formulário ganhar um campo novo (como
+    // aconteceu quando "vistoria" virou "requisitos"), quem já tinha um
+    // check-in salvo no sessionStorage numa versão antiga não fica com
+    // uma aba faltando e a tela quebrando — só entra com essa aba em
+    // branco, igual a quem está começando agora.
+    return {
+      motorista: { ...padrao.motorista, ...salvo.motorista },
+      veiculo: { ...padrao.veiculo, ...salvo.veiculo },
+      requisitos: { ...padrao.requisitos, ...salvo.requisitos },
+      confirmacoes: { ...padrao.confirmacoes, ...salvo.confirmacoes },
+    };
+  });
 
   // Mesmo raciocínio do useEffect em Checkin.jsx: sincroniza o estado do
   // React com o sessionStorage toda vez que algum campo da Conferência muda.
@@ -116,15 +259,30 @@ function Conferencia() {
     }));
   }
 
+  // Grava a resposta ("sim"/"nao") de concordância com os requisitos.
+  function responderRequisitos(resposta) {
+    setConferencia((atual) => ({
+      ...atual,
+      requisitos: { ...atual.requisitos, aceite: resposta },
+    }));
+  }
+
+  // Mesma lógica de responderRequisitos, agora pra aba Normas de Segurança.
+  function responderConfirmacoes(resposta) {
+    setConferencia((atual) => ({
+      ...atual,
+      confirmacoes: { ...atual.confirmacoes, aceite: resposta },
+    }));
+  }
+
   // Indica, para cada aba, se ela já está completa — decide se o ícone
-  // de check aparece ao lado do nome da aba. Vistoria e confirmações
-  // ainda não têm formulário real, então ficam marcadas como "true" só
-  // para não travar a navegação entre abas.
+  // de check aparece ao lado do nome da aba e se o botão "Continuar"
+  // pode ser clicado.
   const statusPorAba = {
     motorista: motoristaCompleto(conferencia.motorista),
     veiculo: veiculoCompleto(conferencia.veiculo),
-    vistoria: true, // provisório
-    confirmacoes: true, // provisório
+    requisitos: listaDeRegrasCompleta(conferencia.requisitos),
+    confirmacoes: listaDeRegrasCompleta(conferencia.confirmacoes),
   };
 
   return (
@@ -156,7 +314,16 @@ function Conferencia() {
         </div>
 
         <div className="conferencia__conteudo">
-          {abaAtiva === 'motorista' && (
+          {/* As quatro abas ficam sempre montadas, sobrepostas na mesma
+              célula do grid (veja .conferencia__painel no CSS) — só a
+              ativa fica visível. Assim a caixa branca se ajusta sozinha
+              à altura da aba mais alta (hoje, Requisitos) e não muda de
+              tamanho quando o usuário troca de aba. */}
+          <div
+            className={`conferencia__painel ${
+              abaAtiva === 'motorista' ? 'conferencia__painel--ativo' : ''
+            }`}
+          >
             <div className="conferencia__campos">
               <div className="campo">
                 <label htmlFor="nomeCompleto">
@@ -175,15 +342,12 @@ function Conferencia() {
 
               <div className="conferencia__linha">
                 <div className="campo">
-                  <label htmlFor="cpf">
-                    CPF <span className="campo__obrigatorio">*</span>
-                  </label>
+                  <label htmlFor="cpf">CPF</label>
                   <input
                     id="cpf"
                     type="text"
                     value={conferencia.motorista.cpf}
-                    onChange={(e) => atualizarMotorista('cpf', e.target.value)}
-                    placeholder="CPF do motorista"
+                    disabled
                   />
                 </div>
 
@@ -217,35 +381,50 @@ function Conferencia() {
                 />
               </div>
             </div>
-          )}
+          </div>
 
-          {abaAtiva === 'veiculo' && (
+          <div
+            className={`conferencia__painel ${
+              abaAtiva === 'veiculo' ? 'conferencia__painel--ativo' : ''
+            }`}
+          >
             <div className="conferencia__campos">
-              {/* Resumo somente-leitura: dados que já vieram da etapa de
-                  Identificação, só para o usuário confirmar que está no
-                  carregamento certo — não são editáveis aqui. */}
-              <div className="conferencia__resumo">
-                <div className="conferencia__resumo-linha">
-                  <span className="conferencia__resumo-rotulo">
-                    Ordem de Carregamento
-                  </span>
-                  <span className="conferencia__resumo-valor">
-                    {dadosCheckin.numeroCarregamento}
-                  </span>
+              {/* Campos travados (disabled), igual o CPF na aba Motorista:
+                  vêm prontos da etapa de Identificação — hoje isso é
+                  dadosCheckin, mas assim que existir um banco de dados
+                  real, essas mesmas informações virão de lá. O motorista
+                  só confirma visualmente, não edita. */}
+              <div className="campo">
+                <label htmlFor="numeroCarregamento">
+                  Ordem de Carregamento
+                </label>
+                <input
+                  id="numeroCarregamento"
+                  type="text"
+                  value={dadosCheckin.numeroCarregamento}
+                  disabled
+                />
+              </div>
+
+              <div className="conferencia__linha">
+                <div className="campo">
+                  <label htmlFor="cliente">Cliente</label>
+                  <input
+                    id="cliente"
+                    type="text"
+                    value={dadosCheckin.cliente}
+                    disabled
+                  />
                 </div>
-                <div className="conferencia__resumo-linha">
-                  <span className="conferencia__resumo-rotulo">Cliente</span>
-                  <span className="conferencia__resumo-valor">
-                    {dadosCheckin.cliente}
-                  </span>
-                </div>
-                <div className="conferencia__resumo-linha">
-                  <span className="conferencia__resumo-rotulo">
-                    Transportadora
-                  </span>
-                  <span className="conferencia__resumo-valor">
-                    {dadosCheckin.transportadora}
-                  </span>
+
+                <div className="campo">
+                  <label htmlFor="transportadora">Transportadora</label>
+                  <input
+                    id="transportadora"
+                    type="text"
+                    value={dadosCheckin.transportadora}
+                    disabled
+                  />
                 </div>
               </div>
 
@@ -300,13 +479,33 @@ function Conferencia() {
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Abas ainda não implementadas mostram um aviso simples no
-              lugar do formulário. */}
-          {abaAtiva !== 'motorista' && abaAtiva !== 'veiculo' && (
-            <p className="conferencia__em-construcao">Em construção.</p>
-          )}
+          <div
+            className={`conferencia__painel ${
+              abaAtiva === 'requisitos' ? 'conferencia__painel--ativo' : ''
+            }`}
+          >
+            <ListaDeRegras
+              itens={requisitosItens}
+              pergunta="Está ciente e concorda com todos os requisitos acima?"
+              valor={conferencia.requisitos.aceite}
+              onChange={responderRequisitos}
+            />
+          </div>
+
+          <div
+            className={`conferencia__painel ${
+              abaAtiva === 'confirmacoes' ? 'conferencia__painel--ativo' : ''
+            }`}
+          >
+            <ListaDeRegras
+              itens={normasSegurancaItens}
+              pergunta="Está ciente e concorda com todas as normas de segurança acima?"
+              valor={conferencia.confirmacoes.aceite}
+              onChange={responderConfirmacoes}
+            />
+          </div>
         </div>
 
         <div className="conferencia__acoes">
@@ -321,7 +520,12 @@ function Conferencia() {
           <button
             type="button"
             className="botao botao--primario conferencia__botao-continuar"
-            disabled={!statusPorAba.motorista || !statusPorAba.veiculo}
+            disabled={
+              !statusPorAba.motorista ||
+              !statusPorAba.veiculo ||
+              !statusPorAba.requisitos ||
+              !statusPorAba.confirmacoes
+            }
           >
             Continuar
           </button>
