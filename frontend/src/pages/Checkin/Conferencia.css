@@ -1,5 +1,8 @@
 /* Estilos da etapa 2 do check-in (Conferencia.jsx): cabeçalho, abas
-   (Motorista/Veículo/Vistoria/Confirmações) e os campos do formulário. */
+   (Motorista/Veículo/Requisitos/Normas de Segurança) e os campos do
+   formulário. As regras dentro de @media no final do arquivo cuidam do
+   layout em telas mais estreitas (o check-in roda num tablet, que tanto
+   pode estar na horizontal quanto na vertical). */
 .conferencia__cabecalho {
   text-align: center;
   margin-bottom: 20px;
@@ -271,4 +274,26 @@
 
 .campo__obrigatorio {
   color: #dc2626;
+}
+
+/* Tablet na vertical (ou tablet pequeno): abaixo dessa largura, os
+   pares de campo lado a lado (CPF/CNH, Cliente/Transportadora, Placa/
+   Tipo de operação) ficam apertados demais em duas colunas — melhor
+   empilhar em uma coluna só, e ganhar espaço reduzindo o padding. */
+@media (max-width: 640px) {
+  .conferencia__conteudo {
+    padding: 16px;
+  }
+
+  .conferencia__linha {
+    grid-template-columns: 1fr;
+  }
+
+  /* Mesma ideia da linha acima: com a tela estreita, a pergunta de
+     concordância e os botões Concordo/Não concordo não cabem mais lado
+     a lado sem apertar — passam a quebrar linha (o texto fica em cima,
+     os botões embaixo). */
+  .conferencia__regras-resposta {
+    flex-wrap: wrap;
+  }
 }

@@ -18,3 +18,12 @@
 .checkin-container--largo {
   max-width: 768px;
 }
+
+/* Tablet na vertical: reduz o respiro nas bordas pra sobrar mais
+   espaço de verdade pro formulário (a largura do container já é 100%
+   até o max-width, então quem precisa de ajuste aqui é só o padding). */
+@media (max-width: 640px) {
+  .checkin-tela {
+    padding: 24px 16px;
+  }
+}

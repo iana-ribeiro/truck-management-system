@@ -15,6 +15,7 @@ import Carregamentos from './pages/Carregamentos';
 import Checkin from './pages/Checkin/Checkin';
 import Identificacao from './pages/Checkin/Identificacao';
 import Conferencia from './pages/Checkin/Conferencia';
+import Confirmacao from './pages/Checkin/Confirmacao';
 import './App.css';
 
 // LayoutPrincipal é a "moldura" usada pelas páginas internas do sistema
@@ -55,6 +56,7 @@ function App() {
           <Route index element={<Navigate to="identificacao" replace />} />
           <Route path="identificacao" element={<Identificacao />} />
           <Route path="conferencia" element={<Conferencia />} />
+          <Route path="confirmacao" element={<Confirmacao />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,0 +1,216 @@
+/* Estilos da etapa 3 do check-in (Confirmacao.jsx): resumo somente-leitura
+   de tudo o que foi preenchido na Conferência, antes de gerar o ticket. */
+.confirmacao__cabecalho {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.confirmacao__cabecalho h1 {
+  font-size: var(--fonte-xl);
+  color: var(--cor-texto);
+  margin-bottom: 4px;
+}
+
+.confirmacao__cabecalho p {
+  font-size: var(--fonte-sm);
+  color: var(--cor-texto-secundario);
+}
+
+.confirmacao {
+  margin-top: 8px;
+}
+
+.confirmacao__conteudo {
+  background-color: var(--cor-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+}
+
+.confirmacao__secao-titulo {
+  font-size: var(--fonte-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 12px;
+}
+
+/* Tabela "Motorista e Viagem": mesma ideia visual do antigo bloco de
+   resumo da aba Veículo (label à esquerda, valor em destaque à
+   direita, linhas separadas por uma borda). */
+.confirmacao__tabela {
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.confirmacao__linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  font-size: var(--fonte-sm);
+}
+
+.confirmacao__linha + .confirmacao__linha {
+  border-top: 1px solid var(--cor-borda);
+}
+
+.confirmacao__rotulo {
+  color: var(--cor-texto-secundario);
+}
+
+.confirmacao__valor {
+  font-weight: 600;
+  color: var(--cor-texto);
+  text-align: right;
+}
+
+.confirmacao__coluna-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.confirmacao__check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fonte-sm);
+  color: var(--cor-texto);
+}
+
+.confirmacao__check-icone {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.confirmacao__acoes {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.confirmacao__botao-confirmar {
+  flex: 1;
+}
+
+/* Tablet na vertical: a tabela de resumo e a coluna de checks não cabem
+   mais lado a lado sem apertar — empilha em uma coluna só (mesma ideia
+   do breakpoint em Conferencia.css). */
+@media (max-width: 640px) {
+  .confirmacao__conteudo {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 24px;
+  }
+
+  /* .checkin-tela passa a usar padding de 24px (em vez de 40px) nesse
+     breakpoint — a margem negativa aqui precisa acompanhar, senão a
+     centralização vertical do cartão de sucesso desalinha. */
+  .confirmacao__sucesso-viewport {
+    margin: -24px 0;
+  }
+}
+
+/* Centraliza o cartão de sucesso no viewport inteiro (vertical e
+   horizontalmente) — só ele, não as outras telas do check-in, que
+   continuam alinhadas no topo como sempre foram. A margem negativa
+   "cancela" o padding vertical de .checkin-tela (definido em
+   Checkin.css); sem isso, min-height:100vh aqui dentro ficaria 40px
+   maior que o espaço realmente disponível, e o flex não centralizaria
+   certo. Os valores precisam bater com o padding de .checkin-tela em
+   cada breakpoint (por isso o ajuste dentro do @media 640px abaixo). */
+.confirmacao__sucesso-viewport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: -40px 0;
+}
+
+/* Tela final de sucesso (Confirmacao.jsx, depois de clicar em "Confirmar
+   e Gerar Ticket"): cartão único, com o número do ticket em destaque. */
+.confirmacao__sucesso {
+  width: 100%;
+  background-color: var(--cor-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.confirmacao__sucesso-icone {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #d1fae5;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.confirmacao__sucesso h1 {
+  font-size: var(--fonte-xl);
+  color: var(--cor-texto);
+  margin-bottom: 4px;
+}
+
+.confirmacao__sucesso p {
+  font-size: var(--fonte-sm);
+  color: var(--cor-texto-secundario);
+}
+
+.confirmacao__ticket-caixa {
+  background-color: var(--cor-fundo);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 24px 0;
+}
+
+.confirmacao__ticket-rotulo {
+  font-size: var(--fonte-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 6px;
+}
+
+.confirmacao__ticket-numero {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--cor-texto);
+}
+
+.confirmacao__sucesso-rodape {
+  margin-top: 24px;
+}
+
+/* "Fazer novo check-in agora" é um botão, mas visualmente é só um link
+   discreto — por isso zera o fundo/borda padrão de .botao aqui em vez
+   de usar as classes de botao.css. */
+.confirmacao__botao-novo-checkin {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: var(--fonte-sm);
+  font-weight: 600;
+  color: var(--cor-texto);
+  cursor: pointer;
+}
+
+.confirmacao__botao-novo-checkin:hover {
+  color: var(--cor-primaria);
+}

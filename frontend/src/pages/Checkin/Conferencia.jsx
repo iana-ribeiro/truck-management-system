@@ -1,28 +1,28 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import { Check } from 'lucide-react';
-import StepIndicator from './components/StepIndicator/StepIndicator';
-import { carregarConferencia, salvarConferencia } from './checkinStorage';
-import './Conferencia.css';
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { Check } from "lucide-react";
+import StepIndicator from "./components/StepIndicator/StepIndicator";
+import { carregarConferencia, salvarConferencia } from "./checkinStorage";
+import "./Conferencia.css";
 
 // Define as quatro abas do formulário de conferência. O "id" é usado
 // internamente (estado, chaves); o "rotulo" é só o texto mostrado.
 const abas = [
-  { id: 'motorista', rotulo: 'Motorista' },
-  { id: 'veiculo', rotulo: 'Veículo' },
-  { id: 'requisitos', rotulo: 'Requisitos' },
-  { id: 'confirmacoes', rotulo: 'Normas de Segurança' },
+  { id: "motorista", rotulo: "Motorista" },
+  { id: "veiculo", rotulo: "Operação e Veículo" },
+  { id: "requisitos", rotulo: "Requisitos" },
+  { id: "confirmacoes", rotulo: "Segurança" },
 ];
 
-// Opções fixas de escolha na aba Veículo, mostradas como "chips"
+// Opções fixas de escolha na aba Operação e Veículo, mostradas como "chips"
 // clicáveis (veja o componente Chip logo abaixo).
-const tiposOperacao = ['Carga', 'Descarga', 'Outro'];
+const tiposOperacao = ["Carga", "Descarga", "Outro"];
 const tiposVeiculo = [
-  'Graneleiro',
-  'Guarda baixa',
-  'In loader',
-  'Sider',
-  'Container',
+  "Graneleiro",
+  "Guarda baixa",
+  "In loader",
+  "Sider",
+  "Container",
 ];
 
 // Itens fixos de conferência da aba "Requisitos" — regras de segurança
@@ -33,47 +33,78 @@ const tiposVeiculo = [
 // usado só nos itens em que o critério tem uma medida ou explicação
 // mais longa, mostrado em fonte menor ao lado do título (ex: "Forro").
 const requisitosItens = [
-  { chave: 'tampasBicas', titulo: 'Tampas das bicas com proteções fechadas dentro da carroceria' },
-  { chave: 'lonaRasgada', titulo: 'Lona sem rasgos ou furos' },
-  { chave: 'lonaDobrada', titulo: 'Lona sem dobras dentro da carroceria' },
-  { chave: 'elasticos', titulo: 'Elásticos soltos entre as carretas e a parte frontal' },
-  { chave: 'correntes', titulo: 'Correntes da carroceria soltas' },
-  { chave: 'assoalho', titulo: 'Assoalho limpo, sem resíduos e sem danos' },
-  { chave: 'portas', titulo: 'Portas com os pinos devidamente travados' },
-  { chave: 'arcos', titulo: 'Arcos retirados guardados embaixo da carreta (fora da carroceria)' },
   {
-    chave: 'forro',
-    titulo: 'Forro',
-    detalhe: 'Mínimo 2x4m por bloco a carregar, máximo 4x4m',
+    chave: "tampasBicas",
+    titulo: "Tampas das bicas com proteções fechadas dentro da carroceria",
+  },
+  { chave: "lonaRasgada", titulo: "Lona sem rasgos ou furos" },
+  { chave: "lonaDobrada", titulo: "Lona sem dobras dentro da carroceria" },
+  {
+    chave: "elasticos",
+    titulo: "Elásticos soltos entre as carretas e a parte frontal",
+  },
+  { chave: "correntes", titulo: "Correntes da carroceria soltas" },
+  { chave: "assoalho", titulo: "Assoalho limpo, sem resíduos e sem danos" },
+  { chave: "portas", titulo: "Portas com os pinos devidamente travados" },
+  {
+    chave: "arcos",
+    titulo: "Arcos retirados guardados embaixo da carreta (fora da carroceria)",
   },
   {
-    chave: 'pneus',
-    titulo: 'Condições dos pneus',
+    chave: "forro",
+    titulo: "Forro",
+    detalhe: "Mínimo 2x4m por bloco a carregar, máximo 4x4m",
+  },
+  {
+    chave: "pneus",
+    titulo: "Condições dos pneus",
     detalhe: 'Cheios, sem deformações ("barriga") ou malha exposta',
   },
   {
-    chave: 'sinalizacao',
-    titulo: 'Sinalização',
-    detalhe: 'Sistema de sinalização e alarme de ré funcionando corretamente',
+    chave: "sinalizacao",
+    titulo: "Sinalização",
+    detalhe: "Sistema de sinalização e alarme de ré funcionando corretamente",
   },
 ];
 
 // Mesma ideia de requisitosItens, mas para a aba "Normas de Segurança":
 // regras de conduta dentro da unidade (e não do veículo/carga).
 const normasSegurancaItens = [
-  { chave: 'subirCarroceria', titulo: 'Proibido subir na carroceria dos caminhões' },
-  { chave: 'epis', titulo: "Uso obrigatório dos EPI's: capacete, óculos de segurança e botina" },
   {
-    chave: 'permanenciaMotorista',
-    titulo:
-      'O motorista deve permanecer na cabine durante o carregamento ou nas cadeiras de espera em frente à sala da nota fiscal',
+    chave: "subirCarroceria",
+    titulo: "Proibido subir na carroceria dos caminhões",
   },
-  { chave: 'faixaPedestre', titulo: 'Caso precise ir a pé até a portaria, utilize a faixa de pedestre' },
-  { chave: 'areaVidro', titulo: 'Proibido acessar a área de armazenagem do vidro e tocar no vidro' },
-  { chave: 'carroceriaLimpa', titulo: 'A carroceria deve estar limpa e organizada, sem materiais soltos' },
-  { chave: 'eletronicos', titulo: 'Proibido o uso de aparelhos eletrônicos durante a movimentação do veículo' },
-  { chave: 'guardian', titulo: 'Não é permitido acessar a Guardian com acompanhante' },
-  { chave: 'fumar', titulo: 'É proibido fumar nas dependências da empresa' },
+  {
+    chave: "epis",
+    titulo: "Uso obrigatório dos EPI's: capacete, óculos de segurança e botina",
+  },
+  {
+    chave: "permanenciaMotorista",
+    titulo:
+      "O motorista deve permanecer na cabine durante o carregamento ou nas cadeiras de espera em frente à sala da nota fiscal",
+  },
+  {
+    chave: "faixaPedestre",
+    titulo: "Caso precise ir a pé até a portaria, utilize a faixa de pedestre",
+  },
+  {
+    chave: "areaVidro",
+    titulo: "Proibido acessar a área de armazenagem do vidro e tocar no vidro",
+  },
+  {
+    chave: "carroceriaLimpa",
+    titulo: "A carroceria deve estar limpa e organizada, sem materiais soltos",
+  },
+  {
+    chave: "eletronicos",
+    titulo:
+      "Proibido o uso de aparelhos eletrônicos durante a movimentação do veículo",
+  },
+  {
+    chave: "guardian",
+    titulo: "Não é permitido acessar a Guardian com acompanhante",
+  },
+  { chave: "fumar", titulo: "É proibido fumar nas dependências da empresa" },
 ];
 
 // Considera a aba "Motorista" completa quando os três campos
@@ -96,7 +127,7 @@ function veiculoCompleto(veiculo) {
 // completa quando o motorista CONCORDA — "Não concordo" não libera a
 // navegação, já que sem concordar ele não pode carregar.
 function listaDeRegrasCompleta(estado) {
-  return estado.aceite === 'sim';
+  return estado.aceite === "sim";
 }
 
 // Botão em formato de pílula usado para escolher UMA opção dentro de uma
@@ -107,7 +138,7 @@ function Chip({ rotulo, ativo, onClick }) {
   return (
     <button
       type="button"
-      className={`conferencia__chip ${ativo ? 'conferencia__chip--ativo' : ''}`}
+      className={`conferencia__chip ${ativo ? "conferencia__chip--ativo" : ""}`}
       onClick={onClick}
     >
       {rotulo}
@@ -120,24 +151,29 @@ function Chip({ rotulo, ativo, onClick }) {
 // usado com textos diferentes dependendo do contexto — na aba
 // Requisitos, por exemplo, são "Concordo"/"Não concordo" em vez de
 // "Sim"/"Não".
-function RespostaToggle({ valor, onChange, rotuloSim = 'Sim', rotuloNao = 'Não' }) {
+function RespostaToggle({
+  valor,
+  onChange,
+  rotuloSim = "Sim",
+  rotuloNao = "Não",
+}) {
   return (
     <div className="conferencia__resposta">
       <button
         type="button"
         className={`conferencia__resposta-botao conferencia__resposta-botao--sim ${
-          valor === 'sim' ? 'conferencia__resposta-botao--ativo' : ''
+          valor === "sim" ? "conferencia__resposta-botao--ativo" : ""
         }`}
-        onClick={() => onChange('sim')}
+        onClick={() => onChange("sim")}
       >
         {rotuloSim}
       </button>
       <button
         type="button"
         className={`conferencia__resposta-botao conferencia__resposta-botao--nao ${
-          valor === 'nao' ? 'conferencia__resposta-botao--ativo' : ''
+          valor === "nao" ? "conferencia__resposta-botao--ativo" : ""
         }`}
-        onClick={() => onChange('nao')}
+        onClick={() => onChange("nao")}
       >
         {rotuloNao}
       </button>
@@ -182,11 +218,15 @@ function ListaDeRegras({ itens, pergunta, valor, onChange }) {
 // do veículo e os requisitos de segurança antes de liberar o carregamento.
 function Conferencia() {
   // dadosCheckin veio da etapa anterior (Identificacao.jsx), repassado
-  // pelo componente pai Checkin.jsx através do Outlet.
-  const { dadosCheckin } = useOutletContext();
+  // pelo componente pai Checkin.jsx através do Outlet. setDadosCheckin é
+  // usado só pra avançar "etapaAtual" quando o motorista clica em
+  // "Continuar" — StepIndicator usa esse número pra saber qual bolinha
+  // destacar (veja também Identificacao.jsx, que faz o mesmo ao avançar
+  // da etapa 1 pra 2).
+  const { dadosCheckin, setDadosCheckin } = useOutletContext();
   const navigate = useNavigate();
 
-  const [abaAtiva, setAbaAtiva] = useState('motorista');
+  const [abaAtiva, setAbaAtiva] = useState("motorista");
 
   // Estado com os dados de cada aba do formulário. Assim como em
   // Checkin.jsx, o inicializador tenta primeiro recuperar um
@@ -197,25 +237,25 @@ function Conferencia() {
   const [conferencia, setConferencia] = useState(() => {
     const padrao = {
       motorista: {
-        nomeCompleto: '',
+        nomeCompleto: "",
         // Vem pronto da etapa de Identificação e fica travado (input
         // disabled no JSX) — não faz sentido o motorista mudar o CPF
         // aqui depois de já ter se identificado com ele.
         cpf: dadosCheckin.documento,
-        cnhNumero: '',
-        telefoneContato: '',
+        cnhNumero: "",
+        telefoneContato: "",
       },
       veiculo: {
-        placa: '',
-        tipoOperacao: '',
-        tipoVeiculo: '',
+        placa: "",
+        tipoOperacao: "",
+        tipoVeiculo: "",
       },
       // "aceite" guarda a resposta única ("sim"/"nao") de concordância
       // com toda a lista de itens da aba — sem resposta ainda, fica
       // como string vazia. Mesmo formato pras duas listas de regras
       // (Requisitos e Normas de Segurança).
-      requisitos: { aceite: '' },
-      confirmacoes: { aceite: '' },
+      requisitos: { aceite: "" },
+      confirmacoes: { aceite: "" },
     };
 
     const salvo = carregarConferencia();
@@ -285,10 +325,20 @@ function Conferencia() {
     confirmacoes: listaDeRegrasCompleta(conferencia.confirmacoes),
   };
 
+  // Avança pra etapa 3 (Confirmação): atualiza o número da etapa —
+  // StepIndicator lê esse valor em toda página do fluxo — e navega. Os
+  // dados já preenchidos aqui (conferencia) não precisam ser passados
+  // adiante manualmente: a Confirmação os recupera sozinha do
+  // sessionStorage, do mesmo jeito que esta página faz ao abrir.
+  function avancarParaConfirmacao() {
+    setDadosCheckin((atual) => ({ ...atual, etapaAtual: 3 }));
+    navigate("/checkin/confirmacao");
+  }
+
   return (
     <>
       <div className="conferencia__cabecalho">
-        <h1>Conferência</h1>
+        <h1>Conferência dos seus dados</h1>
         <p>
           {dadosCheckin.documento} · Ordem {dadosCheckin.numeroCarregamento}
         </p>
@@ -302,7 +352,7 @@ function Conferencia() {
             <button
               key={aba.id}
               type="button"
-              className={`conferencia__aba ${abaAtiva === aba.id ? 'conferencia__aba--ativa' : ''}`}
+              className={`conferencia__aba ${abaAtiva === aba.id ? "conferencia__aba--ativa" : ""}`}
               onClick={() => setAbaAtiva(aba.id)}
             >
               {statusPorAba[aba.id] && (
@@ -321,7 +371,7 @@ function Conferencia() {
               tamanho quando o usuário troca de aba. */}
           <div
             className={`conferencia__painel ${
-              abaAtiva === 'motorista' ? 'conferencia__painel--ativo' : ''
+              abaAtiva === "motorista" ? "conferencia__painel--ativo" : ""
             }`}
           >
             <div className="conferencia__campos">
@@ -334,7 +384,7 @@ function Conferencia() {
                   type="text"
                   value={conferencia.motorista.nomeCompleto}
                   onChange={(e) =>
-                    atualizarMotorista('nomeCompleto', e.target.value)
+                    atualizarMotorista("nomeCompleto", e.target.value)
                   }
                   placeholder="Nome completo do motorista"
                 />
@@ -358,7 +408,7 @@ function Conferencia() {
                     type="text"
                     value={conferencia.motorista.cnhNumero}
                     onChange={(e) =>
-                      atualizarMotorista('cnhNumero', e.target.value)
+                      atualizarMotorista("cnhNumero", e.target.value)
                     }
                     placeholder="Número da CNH"
                   />
@@ -367,7 +417,7 @@ function Conferencia() {
 
               <div className="campo">
                 <label htmlFor="telefoneContato">
-                  Telefone de contato (WhatsApp){' '}
+                  Telefone de contato (WhatsApp){" "}
                   <span className="campo__obrigatorio">*</span>
                 </label>
                 <input
@@ -375,7 +425,7 @@ function Conferencia() {
                   type="text"
                   value={conferencia.motorista.telefoneContato}
                   onChange={(e) =>
-                    atualizarMotorista('telefoneContato', e.target.value)
+                    atualizarMotorista("telefoneContato", e.target.value)
                   }
                   placeholder="(00) 00000-0000"
                 />
@@ -385,7 +435,7 @@ function Conferencia() {
 
           <div
             className={`conferencia__painel ${
-              abaAtiva === 'veiculo' ? 'conferencia__painel--ativo' : ''
+              abaAtiva === "veiculo" ? "conferencia__painel--ativo" : ""
             }`}
           >
             <div className="conferencia__campos">
@@ -431,7 +481,7 @@ function Conferencia() {
               <div className="conferencia__linha">
                 <div className="campo">
                   <label htmlFor="placa">
-                    Placa do veículo{' '}
+                    Placa do veículo{" "}
                     <span className="campo__obrigatorio">*</span>
                   </label>
                   <input
@@ -439,7 +489,7 @@ function Conferencia() {
                     type="text"
                     value={conferencia.veiculo.placa}
                     onChange={(e) =>
-                      atualizarVeiculo('placa', e.target.value.toUpperCase())
+                      atualizarVeiculo("placa", e.target.value.toUpperCase())
                     }
                     placeholder="ABC-1D34"
                   />
@@ -447,7 +497,7 @@ function Conferencia() {
 
                 <div className="campo">
                   <label>
-                    Tipo de operação{' '}
+                    Tipo de operação{" "}
                     <span className="campo__obrigatorio">*</span>
                   </label>
                   <div className="conferencia__chips">
@@ -456,7 +506,7 @@ function Conferencia() {
                         key={tipo}
                         rotulo={tipo}
                         ativo={conferencia.veiculo.tipoOperacao === tipo}
-                        onClick={() => atualizarVeiculo('tipoOperacao', tipo)}
+                        onClick={() => atualizarVeiculo("tipoOperacao", tipo)}
                       />
                     ))}
                   </div>
@@ -473,7 +523,7 @@ function Conferencia() {
                       key={tipo}
                       rotulo={tipo}
                       ativo={conferencia.veiculo.tipoVeiculo === tipo}
-                      onClick={() => atualizarVeiculo('tipoVeiculo', tipo)}
+                      onClick={() => atualizarVeiculo("tipoVeiculo", tipo)}
                     />
                   ))}
                 </div>
@@ -483,7 +533,7 @@ function Conferencia() {
 
           <div
             className={`conferencia__painel ${
-              abaAtiva === 'requisitos' ? 'conferencia__painel--ativo' : ''
+              abaAtiva === "requisitos" ? "conferencia__painel--ativo" : ""
             }`}
           >
             <ListaDeRegras
@@ -496,7 +546,7 @@ function Conferencia() {
 
           <div
             className={`conferencia__painel ${
-              abaAtiva === 'confirmacoes' ? 'conferencia__painel--ativo' : ''
+              abaAtiva === "confirmacoes" ? "conferencia__painel--ativo" : ""
             }`}
           >
             <ListaDeRegras
@@ -512,7 +562,7 @@ function Conferencia() {
           <button
             type="button"
             className="botao botao--secundario"
-            onClick={() => navigate('/checkin/identificacao')}
+            onClick={() => navigate("/checkin/identificacao")}
           >
             Voltar
           </button>
@@ -520,6 +570,7 @@ function Conferencia() {
           <button
             type="button"
             className="botao botao--primario conferencia__botao-continuar"
+            onClick={avancarParaConfirmacao}
             disabled={
               !statusPorAba.motorista ||
               !statusPorAba.veiculo ||

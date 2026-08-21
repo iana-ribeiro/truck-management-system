@@ -27,6 +27,18 @@
   cursor: not-allowed;
 }
 
+/* Ação final de um fluxo (ex: "Confirmar e Gerar Ticket" no check-in) —
+   verde pra se diferenciar visualmente do azul "botao--primario", que é
+   usado nos passos intermediários (ex: "Continuar"). */
+.botao--sucesso {
+  background-color: #10b981;
+  color: white;
+}
+
+.botao--sucesso:hover {
+  background-color: #059669;
+}
+
 .botao--secundario {
   background-color: transparent;
   border: 1px solid var(--cor-borda);
