@@ -17,6 +17,10 @@ import carregamentosRoutes from './routes/carregamentos.js';
 // Esse import EXECUTA o arquivo routes/carregamentos.js nesse momento,
 // e guarda o que ele exportou (o router) dentro dessa variável.
 
+import checkinsRoutes from './routes/checkins.js';
+// Rotas do check-in do motorista (guardadas num banco SQLite próprio —
+// veja backend/database/connection.sqlite.js).
+
 const app = express(); // Cria a aplicação do servidor.
 
 const PORT = 4000;
@@ -34,6 +38,9 @@ app.use(express.json());
 app.use('/carregamentos', carregamentosRoutes);
 // Diz que qualquer pedido que chegar no endereço /carregamentos
 // deve ser tratado pelas rotas importadas acima.
+
+app.use('/checkins', checkinsRoutes);
+// Mesma ideia, agora para os pedidos que chegarem em /checkins.
 
 app.listen(PORT, () => {
   // Faz o servidor começar a escutar pedidos na porta 4000.

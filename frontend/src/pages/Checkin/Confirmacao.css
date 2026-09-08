@@ -90,6 +90,18 @@
   flex-shrink: 0;
 }
 
+/* Mensagem de erro do envio do check-in pro backend (mesma linguagem
+   visual do erro de Identificacao.css). */
+.confirmacao__erro {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: var(--fonte-sm);
+  margin-top: 16px;
+}
+
 .confirmacao__acoes {
   display: flex;
   gap: 8px;

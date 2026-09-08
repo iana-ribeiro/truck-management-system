@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
-import ChamarDocaModal from '../ChamarDocaModal/ChamarDocaModal';
 import './TabelaCarregamentos.css';
 
 // Define quais colunas existem na tabela e em que ordem aparecem.
@@ -21,20 +20,9 @@ const colunas = [
 ];
 
 function TabelaCarregamentos({ carregamentos, carregando }) {
-  // Guarda qual linha da tabela está com o modal "Chamar para doca"
-  // aberto. Quando ninguém foi selecionado, fica null.
-  const [carregamentoSelecionado, setCarregamentoSelecionado] = useState(null);
-
   // Guarda por qual coluna a tabela está ordenada agora, e em qual
   // direção (crescente/decrescente). Ex: { coluna: 'cliente', direcao: 'asc' }.
   const [ordenacao, setOrdenacao] = useState({ coluna: null, direcao: 'asc' });
-
-  function handleConfirmar(doca) {
-    // Por enquanto só mostra no console — futuramente aqui entraria a
-    // chamada para o backend avisando que o motorista foi chamado.
-    console.log(`${carregamentoSelecionado.placa} chamado para a ${doca}`);
-    setCarregamentoSelecionado(null); // fecha o modal
-  }
 
   // Roda quando o usuário clica no cabeçalho de uma coluna.
   function handleOrdenar(chave) {
@@ -93,7 +81,6 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
                 )}
               </th>
             ))}
-            <th>Ação</th>
           </tr>
         </thead>
 
@@ -108,9 +95,6 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
                     <div className="esqueleto celula-esqueleto" />
                   </td>
                 ))}
-                <td>
-                  <div className="esqueleto celula-esqueleto celula-esqueleto--acao" />
-                </td>
               </tr>
             ))
           ) : carregamentosOrdenados.length > 0 ? (
@@ -119,35 +103,18 @@ function TabelaCarregamentos({ carregamentos, carregando }) {
                 {colunas.map((col) => (
                   <td key={col.chave}>{carregamento[col.chave]}</td>
                 ))}
-                <td>
-                  <button
-                    className="botao botao--primario botao--compacto"
-                    onClick={() => setCarregamentoSelecionado(carregamento)}
-                  >
-                    Chamar
-                  </button>
-                </td>
               </tr>
             ))
           ) : (
             // Nem carregando, nem com resultados: a busca não encontrou nada.
             <tr>
-              <td colSpan="10" className="sem-dados">
+              <td colSpan={colunas.length} className="sem-dados">
                 Nenhum carregamento encontrado.
               </td>
             </tr>
           )}
         </tbody>
       </table>
-
-      {/* O modal fica sempre "montado" aqui; ele mesmo decide não
-          mostrar nada quando "carregamento" é null (veja ChamarDocaModal.jsx). */}
-      <ChamarDocaModal
-        carregamento={carregamentoSelecionado}
-        carregamentos={carregamentos}
-        onFechar={() => setCarregamentoSelecionado(null)}
-        onConfirmar={handleConfirmar}
-      />
     </section>
   );
 }

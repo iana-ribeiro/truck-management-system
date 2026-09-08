@@ -7,20 +7,12 @@ import {
   limparCheckin,
   limparConferencia,
 } from "./checkinStorage";
+import { registrarCheckin } from "../../services/checkins";
 import "./Confirmacao.css";
 
 // Quantos segundos a tela de sucesso espera, mostrando a contagem
 // regressiva, antes de voltar sozinha pro início do check-in.
 const SEGUNDOS_ATE_REINICIAR = 15;
-
-// Gera um número de ticket só pra preencher a tela enquanto não existe
-// backend de verdade emitindo esse número. Quando a geração real (e a
-// lógica de prioridade da fila, ainda em definição) estiver pronta, essa
-// função sai e o número passa a vir da API.
-function gerarNumeroTicketFake() {
-  const numero = Math.floor(1000 + Math.random() * 9000); // 4 dígitos
-  return `CRG-${numero}`;
-}
 
 // Terceira e última etapa do check-in: mostra um resumo de tudo o que
 // foi preenchido na Conferência, pra o motorista revisar antes de
@@ -41,6 +33,13 @@ function Confirmacao() {
   const [segundosRestantes, setSegundosRestantes] = useState(
     SEGUNDOS_ATE_REINICIAR,
   );
+
+  // Controlam o pedido pro backend disparado por "Confirmar e Gerar
+  // Ticket": enviando trava o botão (evita clique duplo enquanto espera a
+  // resposta), erroEnvio mostra uma mensagem se o backend não conseguir
+  // registrar o check-in (ex: servidor fora do ar).
+  const [enviando, setEnviando] = useState(false);
+  const [erroEnvio, setErroEnvio] = useState("");
 
   // Sem os dados da Conferência salvos (ex: alguém entrou direto nessa
   // URL, sem passar pelas etapas anteriores), não tem o que confirmar
@@ -86,12 +85,39 @@ function Confirmacao() {
     { rotulo: "Tipo de Carga", valor: conferencia.veiculo.tipoVeiculo },
   ];
 
-  // Ainda não existe backend gerando o ticket de verdade (nem a lógica
-  // de prioridade da fila, que vai decidir esse número futuramente) —
-  // por enquanto só troca pra tela de sucesso com um número fake e
-  // dispara a contagem regressiva (veja o useEffect acima).
-  function confirmarEGerarTicket() {
-    setTicket(gerarNumeroTicketFake());
+  // Envia o check-in completo (dados da Identificação + tudo o que foi
+  // preenchido na Conferência) pro backend gravar. O backend devolve o
+  // número do ticket já gerado — ainda não existe lógica de prioridade
+  // de fila (isso é um problema à parte, pra depois); por enquanto o
+  // ticket é só um número sequencial. Dando certo, troca pra tela de
+  // sucesso e dispara a contagem regressiva (veja o useEffect acima).
+  async function confirmarEGerarTicket() {
+    setEnviando(true);
+    setErroEnvio("");
+
+    try {
+      const ticketGerado = await registrarCheckin({
+        numeroCarregamento: dadosCheckin.numeroCarregamento,
+        cliente: dadosCheckin.cliente,
+        transportadora: dadosCheckin.transportadora,
+        motorista: conferencia.motorista,
+        veiculo: conferencia.veiculo,
+        // O backend guarda isso como 0/1 (SQLite não tem boolean de
+        // verdade) — aqui na borda de saída já convertemos a resposta
+        // "sim"/"nao" da Conferência pra um valor true/false de verdade.
+        aceiteRequisitos: conferencia.requisitos.aceite === "sim",
+        aceiteSeguranca: conferencia.confirmacoes.aceite === "sim",
+      });
+
+      setTicket(ticketGerado);
+    } catch (error) {
+      console.error(error);
+      setErroEnvio(
+        "Não foi possível concluir o check-in. Verifique sua conexão e tente novamente.",
+      );
+    } finally {
+      setEnviando(false);
+    }
   }
 
   // Encerra o check-in local: apaga os dados temporários (documento
@@ -191,11 +217,14 @@ function Confirmacao() {
           </div>
         </div>
 
+        {erroEnvio && <p className="confirmacao__erro">{erroEnvio}</p>}
+
         <div className="confirmacao__acoes">
           <button
             type="button"
             className="botao botao--secundario"
             onClick={() => navigate("/checkin/conferencia")}
+            disabled={enviando}
           >
             Voltar
           </button>
@@ -204,8 +233,9 @@ function Confirmacao() {
             type="button"
             className="botao botao--sucesso confirmacao__botao-confirmar"
             onClick={confirmarEGerarTicket}
+            disabled={enviando}
           >
-            Confirmar e Gerar Ticket
+            {enviando ? "Enviando..." : "Confirmar e Gerar Ticket"}
           </button>
         </div>
       </div>
