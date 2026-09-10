@@ -1,0 +1,7 @@
+# O que NÃO deve ir para dentro da imagem Docker.
+
+node_modules
+dist
+.env
+.env.example
+*.log

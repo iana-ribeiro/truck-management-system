@@ -1,26 +1,21 @@
-// carregamentosService.sqlite.js — versão que busca os carregamentos a
-// partir dos check-ins já registrados (veja checkinsService.js e a
-// tabela "checkins" em database/connection.sqlite.js).
+// carregamentosService.checkins.js — versão que busca os carregamentos a
+// partir dos check-ins já registrados (veja checkinsService.js).
 //
 // Antes existia um carregamentosService.mock.js com uma lista fixa e
 // fictícia (sempre os mesmos 5 pedidos, nunca mudava). Agora que o
 // check-in do motorista realmente grava algo no banco, faz mais sentido
 // a tabela de Gestão de Carregamentos refletir isso de verdade — por
-// isso esse arquivo tomou o lugar do mock.
+// isso esse arquivo tomou o lugar do mock. (Chama-se "checkins", e não
+// "sqlite" ou "mssql", porque o que importa aqui é DE ONDE vem o dado —
+// dos nossos próprios check-ins — não qual banco guarda isso por baixo.)
 
-import { db } from '../database/connection.sqlite.js';
+import { listarCheckins } from './checkinsService.js';
 
 // Assim como no carregamentosService.mssql.js, o controller não percebe
 // diferença nenhuma — só chama buscarCarregamentos() e recebe a lista
 // pronta, no mesmo formato de sempre (pedido, cliente, placa, doca...).
-//
-// Essa função não precisa de "await" de verdade (o better-sqlite3 é
-// síncrono — não depende de rede, como o mssql), mas continua "async"
-// pra manter a mesma assinatura das outras duas versões do service.
 export async function buscarCarregamentos() {
-  const checkins = db
-    .prepare('SELECT * FROM checkins ORDER BY id DESC')
-    .all();
+  const checkins = await listarCheckins();
 
   return checkins.map((checkin) => ({
     pedido: checkin.numero_carregamento,

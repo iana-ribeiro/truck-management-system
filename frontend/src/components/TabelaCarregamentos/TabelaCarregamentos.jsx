@@ -4,9 +4,10 @@ import './TabelaCarregamentos.css';
 
 // Define quais colunas existem na tabela e em que ordem aparecem.
 // "chave" precisa bater com o nome do campo que vem da API (veja
-// carregamentosService.mock.js no backend); "rotulo" é o texto exibido
-// no cabeçalho. Ter isso numa lista só, em vez de escrever cada <th> e
-// <td> na mão, evita repetir código e facilita adicionar/remover colunas.
+// carregamentosService.checkins.js no backend); "rotulo" é o texto
+// exibido no cabeçalho. Ter isso numa lista só, em vez de escrever cada
+// <th> e <td> na mão, evita repetir código e facilita adicionar/remover
+// colunas.
 const colunas = [
   { chave: 'pedido', rotulo: 'Pedido' },
   { chave: 'cliente', rotulo: 'Cliente' },

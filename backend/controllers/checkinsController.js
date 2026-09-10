@@ -8,9 +8,15 @@ import { criarCheckin, listarCheckins } from '../services/checkinsService.js';
 // Confirmação. Espera o corpo do pedido (req.body) no mesmo formato que
 // o frontend já monta hoje: numeroCarregamento, cliente, transportadora,
 // motorista {...}, veiculo {...}, aceiteRequisitos, aceiteSeguranca.
-export function registrarCheckin(req, res) {
+//
+// "async"/"await" aqui são obrigatórios: criarCheckin agora conversa com
+// o SQL Server (depende de rede), então devolve uma Promise, não o
+// ticket direto. Sem o await, "ticket" seria a própria Promise (ainda
+// não resolvida) em vez do valor — e o erro, se a conexão falhar, nunca
+// cairia neste try/catch (aconteceria depois, sem ninguém tratando).
+export async function registrarCheckin(req, res) {
   try {
-    const ticket = criarCheckin(req.body);
+    const ticket = await criarCheckin(req.body);
 
     res.status(201).json({ ticket });
     // 201 = "Created". Devolve o ticket gerado pra o frontend mostrar na
@@ -23,9 +29,10 @@ export function registrarCheckin(req, res) {
 
 // Lista os check-ins já feitos — ainda sem tela nenhuma consumindo isso,
 // mas já disponível pra quando existir um painel de acompanhamento.
-export function listarCheckinsRegistrados(req, res) {
+// Mesmo motivo do async/await acima: listarCheckins depende de rede agora.
+export async function listarCheckinsRegistrados(req, res) {
   try {
-    const checkins = listarCheckins();
+    const checkins = await listarCheckins();
     res.json(checkins);
   } catch (error) {
     console.error(error);

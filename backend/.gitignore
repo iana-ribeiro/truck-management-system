@@ -26,5 +26,5 @@ dist-ssr
 # Variáveis de ambiente
 .env
 
-# Banco de dados local (gerado automaticamente por connection.sqlite.js)
+# Caso algum dia volte a existir um banco de arquivo único (ex: SQLite)
 *.db

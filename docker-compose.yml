@@ -1,0 +1,31 @@
+# Sobe o backend e o frontend juntos, cada um no seu container, com um
+# comando só: "docker compose up --build".
+#
+# Isso é pra RODAR LOCALMENTE (testar a "dockerização" na sua máquina).
+# No Kubernetes, cada um desses serviços vira um recurso separado (Pod +
+# Service) — o docker-compose não é usado lá, mas os MESMOS Dockerfiles
+# (backend/Dockerfile e frontend/Dockerfile) são a base das imagens que
+# o Kubernetes vai rodar.
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    # Usa as mesmas variáveis do seu backend/.env local — sem credencial
+    # nenhuma escrita aqui no compose.
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Dentro da rede do Docker, o navegador do usuário ainda acessa
+        # o backend pela porta publicada no seu computador (localhost),
+        # não pelo nome do serviço "backend" — por isso continua sendo
+        # localhost:4000 aqui, e não "http://backend:4000".
+        VITE_API_URL: http://localhost:4000
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend

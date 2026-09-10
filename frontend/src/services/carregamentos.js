@@ -14,6 +14,16 @@ export async function buscarCarregamentos() {
   // por isso usamos "await": esperamos a resposta chegar antes de seguir.
   const resposta = await fetch(`${API_URL}/carregamentos`);
 
+  // fetch só rejeita numa falha de REDE (ex: servidor fora do ar) — uma
+  // resposta de erro do backend (como 500) ainda chega aqui normalmente,
+  // só que com "resposta.ok" em false. Sem essa checagem, um erro do
+  // backend (ex: { erro: "..." }) seria tratado como se fossem os dados
+  // de verdade, e quebraria mais na frente (Carregamentos.jsx espera uma
+  // LISTA de carregamentos, não um objeto de erro).
+  if (!resposta.ok) {
+    throw new Error('Falha ao buscar os carregamentos.');
+  }
+
   // A resposta chega em um formato "cru"; .json() a transforma em um
   // objeto/array JavaScript que dá para usar normalmente no código.
   const dados = await resposta.json();

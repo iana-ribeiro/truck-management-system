@@ -18,8 +18,24 @@ import carregamentosRoutes from './routes/carregamentos.js';
 // e guarda o que ele exportou (o router) dentro dessa variável.
 
 import checkinsRoutes from './routes/checkins.js';
-// Rotas do check-in do motorista (guardadas num banco SQLite próprio —
-// veja backend/database/connection.sqlite.js).
+// Rotas do check-in do motorista (guardadas num banco SQL Server dedicado —
+// veja backend/database/connection.checkins.mssql.js).
+
+// "Para-quedas" contra erros que fogem do try/catch normal. O pacote do
+// SQL Server (mssql/tedious), quando não consegue conectar (endereço
+// errado, rede fora do ar), às vezes dispara o erro de um jeito que o
+// Node trata como "não tratado" e derruba o processo INTEIRO — mesmo
+// tendo try/catch em volta do await. Sem isso, cada tentativa de usar
+// /checkins ou /carregamentos com o banco fora do ar derrubaria o
+// servidor todo (e, no Kubernetes, entraria num loop de reinícios).
+// Aqui só registramos o erro no console e deixamos o servidor de pé.
+process.on('unhandledRejection', (erro) => {
+  console.error('❌ Erro não tratado (promise rejeitada):', erro);
+});
+
+process.on('uncaughtException', (erro) => {
+  console.error('❌ Erro não tratado (exceção):', erro);
+});
 
 const app = express(); // Cria a aplicação do servidor.
 

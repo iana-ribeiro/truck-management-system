@@ -1,5 +1,15 @@
-// carregamentosService.mssql.js — versão SQL Server
-// O controller e a rota NÃO mudam. Só este arquivo (e o connection.mssql.js) sabem que o banco é SQL Server.
+// carregamentosService.mssql.js — versão que busca os carregamentos
+// direto do sistema da empresa (dbo.vfluxo), sem passar pelos check-ins.
+// O controller e a rota não mudam — só este arquivo (e o
+// connection.mssql.js) sabem que o banco é o SQL Server da empresa.
+//
+// Hoje NÃO é essa a versão ativa (veja o import comentado em
+// carregamentosController.js) — a tabela de Gestão de Carregamentos usa
+// carregamentosService.checkins.js, que mostra os check-ins já feitos.
+// Esta consulta ainda está incompleta: só traz pedido/cliente/doca, sem
+// filtro de data nem os outros campos que a tabela espera (placa,
+// programado, status...) — falta ajustar quando os nomes de coluna reais
+// da dbo.vfluxo (documento do motorista, data do carregamento) chegarem.
 
 import { getConnection } from '../database/connection.mssql.js';
 
@@ -18,11 +28,6 @@ export async function buscarCarregamentos() {
     AND Frete = 'DAP'
   `);
 
-  // No sqlite3 os dados vinham direto no callback (err, rows).
-  // No mssql, os dados vêm dentro de resultado.recordset.
+  // Os dados vêm dentro de resultado.recordset (formato do pacote mssql).
   return resultado.recordset;
 }
-
-// ATENÇÃO: essa query assume que as tabelas Carregamentos, Clientes e Veiculos
-// no SQL Server têm os MESMOS nomes de tabela e coluna do seu banco de estudo.
-// Peça pra pessoa te mandar os nomes reais e ajuste aqui se for diferente.

@@ -1,63 +1,69 @@
-// checkinsService.js — quem realmente conversa com o banco de check-ins.
+// checkinsService.js — quem realmente conversa com o banco de check-ins
+// (SQL Server, dedicado — veja database/connection.checkins.mssql.js).
 // Controller e rota não sabem nada de SQL; só chamam as funções daqui.
 
-import { db } from '../database/connection.sqlite.js';
-
-// db.prepare(...) monta a instrução SQL uma vez só; .run(...)/.all(...)
-// executam ela de fato, passando os valores no lugar dos "@nome".
-// Isso evita o erro clássico de SQL injection (nunca colamos o valor
-// direto dentro do texto da consulta).
-const inserirCheckin = db.prepare(`
-  INSERT INTO checkins (
-    numero_carregamento, cliente, transportadora,
-    motorista_nome, motorista_cpf, motorista_cnh, motorista_telefone,
-    veiculo_placa, veiculo_tipo_operacao, veiculo_tipo,
-    aceite_requisitos, aceite_seguranca, ticket
-  ) VALUES (
-    @numeroCarregamento, @cliente, @transportadora,
-    @motoristaNome, @motoristaCpf, @motoristaCnh, @motoristaTelefone,
-    @veiculoPlaca, @veiculoTipoOperacao, @veiculoTipo,
-    @aceiteRequisitos, @aceiteSeguranca, @ticket
-  )
-`);
+import sql from 'mssql';
+import { getConnection } from '../database/connection.checkins.mssql.js';
 
 // Recebe o check-in já concluído (no formato que vem do frontend — veja
 // Confirmacao.jsx) e grava uma linha nova na tabela. Retorna o ticket
 // gerado, que é o que o motorista vê na tela de sucesso.
-export function criarCheckin(dados) {
-  // Gera o ticket ANTES de inserir, usando o próximo id da tabela. Isso é
-  // só um placeholder simples (mesmo formato "CRG-XXXX" que o frontend já
-  // usava de mentirinha) — quando a lógica de prioridade da fila for
-  // definida, é aqui que ela deve entrar no lugar dessa conta.
-  const proximoId = db.prepare('SELECT COALESCE(MAX(id), 0) + 1 AS id FROM checkins').get().id;
+export async function criarCheckin(dados) {
+  const pool = await getConnection();
+
+  // Descobre o próximo id ANTES de inserir, pra poder montar o ticket
+  // "CRG-000X". É só um placeholder simples — quando a lógica de
+  // prioridade da fila for definida, é aqui que ela deve entrar no lugar
+  // dessa conta.
+  const resultadoId = await pool
+    .request()
+    .query('SELECT ISNULL(MAX(id), 0) + 1 AS proximoId FROM checkins');
+  const proximoId = resultadoId.recordset[0].proximoId;
   const ticket = `CRG-${String(proximoId).padStart(4, '0')}`;
 
-  inserirCheckin.run({
-    numeroCarregamento: dados.numeroCarregamento,
-    cliente: dados.cliente ?? null,
-    transportadora: dados.transportadora ?? null,
-    motoristaNome: dados.motorista.nomeCompleto,
-    motoristaCpf: dados.motorista.cpf,
-    motoristaCnh: dados.motorista.cnhNumero || null,
-    motoristaTelefone: dados.motorista.telefoneContato,
-    veiculoPlaca: dados.veiculo.placa,
-    veiculoTipoOperacao: dados.veiculo.tipoOperacao,
-    veiculoTipo: dados.veiculo.tipoVeiculo,
-    // SQLite não tem boolean — convertendo "sim"/"nao" pra 1/0 aqui, na
-    // borda de entrada do banco, quem manda os dados (o controller) nem
-    // precisa saber desse detalhe.
-    aceiteRequisitos: dados.aceiteRequisitos ? 1 : 0,
-    aceiteSeguranca: dados.aceiteSeguranca ? 1 : 0,
-    ticket,
-  });
+  // ".input(nome, tipo, valor)" manda cada valor separado do texto da
+  // consulta — evita o erro clássico de SQL injection (nunca colamos o
+  // valor direto dentro do SQL).
+  await pool
+    .request()
+    .input('numeroCarregamento', sql.NVarChar, dados.numeroCarregamento)
+    .input('cliente', sql.NVarChar, dados.cliente ?? null)
+    .input('transportadora', sql.NVarChar, dados.transportadora ?? null)
+    .input('motoristaNome', sql.NVarChar, dados.motorista.nomeCompleto)
+    .input('motoristaCpf', sql.NVarChar, dados.motorista.cpf)
+    .input('motoristaCnh', sql.NVarChar, dados.motorista.cnhNumero || null)
+    .input('motoristaTelefone', sql.NVarChar, dados.motorista.telefoneContato)
+    .input('veiculoPlaca', sql.NVarChar, dados.veiculo.placa)
+    .input('veiculoTipoOperacao', sql.NVarChar, dados.veiculo.tipoOperacao)
+    .input('veiculoTipo', sql.NVarChar, dados.veiculo.tipoVeiculo)
+    .input('aceiteRequisitos', sql.Bit, dados.aceiteRequisitos ? 1 : 0)
+    .input('aceiteSeguranca', sql.Bit, dados.aceiteSeguranca ? 1 : 0)
+    .input('ticket', sql.NVarChar, ticket)
+    .query(`
+      INSERT INTO checkins (
+        numero_carregamento, cliente, transportadora,
+        motorista_nome, motorista_cpf, motorista_cnh, motorista_telefone,
+        veiculo_placa, veiculo_tipo_operacao, veiculo_tipo,
+        aceite_requisitos, aceite_seguranca, ticket
+      ) VALUES (
+        @numeroCarregamento, @cliente, @transportadora,
+        @motoristaNome, @motoristaCpf, @motoristaCnh, @motoristaTelefone,
+        @veiculoPlaca, @veiculoTipoOperacao, @veiculoTipo,
+        @aceiteRequisitos, @aceiteSeguranca, @ticket
+      )
+    `);
 
   return ticket;
 }
 
-// Lista os check-ins já registrados, mais recentes primeiro — útil pra
-// uma futura tela de acompanhamento/fila no painel interno.
-export function listarCheckins() {
-  return db
-    .prepare('SELECT * FROM checkins ORDER BY id DESC')
-    .all();
+// Lista os check-ins já registrados, mais recentes primeiro — usada
+// tanto pro controller quanto por carregamentosService.checkins.js (a
+// tabela de Gestão de Carregamentos se popula a partir daqui).
+export async function listarCheckins() {
+  const pool = await getConnection();
+  const resultado = await pool
+    .request()
+    .query('SELECT * FROM checkins ORDER BY id DESC');
+
+  return resultado.recordset;
 }
