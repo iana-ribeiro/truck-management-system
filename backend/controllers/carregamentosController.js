@@ -1,9 +1,12 @@
 // 3
 // Resumo do arquivo: ele recebe o pedido, tenta buscar os dados chamando o service, e devolve pro cliente — ou os dados certinhos, ou uma mensagem de erro, se algo falhar no caminho.
 
-// Pra usar os check-ins já registrados (hoje, no banco de check-ins dedicado):
-import { buscarCarregamentos } from '../services/carregamentosService.checkins.js';
-// Pra usar o SQL Server da empresa direto (banco real do dbo.vfluxo):
+// Pra usar os carregamentos do dia (vfluxo) cruzados com os check-ins já
+// feitos pelos motoristas (versão atual):
+import { buscarCarregamentos } from '../services/carregamentosService.cruzado.js';
+// Pra usar só os check-ins já registrados, sem cruzar com o vfluxo:
+// import { buscarCarregamentos } from '../services/carregamentosService.checkins.js';
+// Pra usar o SQL Server da empresa direto, sem cruzar com check-ins:
 // import { buscarCarregamentos } from '../services/carregamentosService.mssql.js';
 // Importa a função que sabe buscar os dados no banco.
 

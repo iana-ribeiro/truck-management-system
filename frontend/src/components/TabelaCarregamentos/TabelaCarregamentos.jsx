@@ -18,6 +18,7 @@ const colunas = [
   { chave: 'inicioCarregamento', rotulo: 'Iní. Carreg.' },
   { chave: 'fimCarregamento', rotulo: 'Fim Carreg.' },
   { chave: 'frete', rotulo: 'Frete' },
+  { chave: 'status', rotulo: 'Status' },
 ];
 
 function TabelaCarregamentos({ carregamentos, carregando }) {

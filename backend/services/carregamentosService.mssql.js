@@ -3,13 +3,14 @@
 // O controller e a rota não mudam — só este arquivo (e o
 // connection.mssql.js) sabem que o banco é o SQL Server da empresa.
 //
-// Hoje NÃO é essa a versão ativa (veja o import comentado em
-// carregamentosController.js) — a tabela de Gestão de Carregamentos usa
-// carregamentosService.checkins.js, que mostra os check-ins já feitos.
-// Esta consulta ainda está incompleta: só traz pedido/cliente/doca, sem
-// filtro de data nem os outros campos que a tabela espera (placa,
-// programado, status...) — falta ajustar quando os nomes de coluna reais
-// da dbo.vfluxo (documento do motorista, data do carregamento) chegarem.
+// Esta função não é chamada direto pelo controller — é usada por
+// carregamentosService.cruzado.js pra buscar a lista "oficial" dos
+// carregamentos programados pra hoje, que depois é cruzada com os
+// check-ins já feitos (veja aquele arquivo).
+//
+// Retorna as linhas com os nomes de coluna originais do vfluxo (Pedido,
+// Placa_Cavalo...) — quem converte pro formato que o frontend espera
+// (pedido, placa...) é o carregamentosService.cruzado.js.
 
 import { getConnection } from '../database/connection.mssql.js';
 
@@ -18,14 +19,20 @@ export async function buscarCarregamentos() {
 
   const resultado = await pool.request().query(`
     SELECT
-    pedido,
-    cliente,
-    doca
+      Pedido,
+      Cliente,
+      Placa_Cavalo,
+      Doca,
+      Programado,
+      Frete,
+      Inicio_Carregamento,
+      Fim_Carregamento
 
     FROM dbo.vfluxo
 
-    WHERE planta='G. TATUI'
-    AND Frete = 'DAP'
+    WHERE planta = 'G. TATUI'
+      AND Frete = 'DAP'
+      AND CAST(Programado AS DATE) = CAST(GETDATE() AS DATE)
   `);
 
   // Os dados vêm dentro de resultado.recordset (formato do pacote mssql).

@@ -1,16 +1,17 @@
--- checkins-schema.sql
---
--- Script de UMA VEZ SÓ, pra rodar manualmente no SQL Server (alguém com
--- permissão de administrador/DBA, geralmente não é a mesma permissão que
--- o próprio sistema usa no dia a dia). Cria o banco de dados dedicado
--- aos check-ins.
---
--- Depois que o banco existir, NÃO É PRECISO rodar mais nada aqui: a
--- tabela "checkins" é criada sozinha, automaticamente, na primeira vez
--- que o backend conectar (veja database/connection.checkins.mssql.js).
---
--- Troque "Checkins" abaixo pelo nome que fizer mais sentido pra vocês —
--- só lembrando de usar o MESMO nome na variável CHECKINS_DB_DATABASE
--- do arquivo .env.
-
 CREATE DATABASE Checkins;
+GO
+
+-- REPLACE the password below with a strong password before running.
+CREATE LOGIN checkins_app WITH PASSWORD = 'REPLACE_THIS_PASSWORD';
+GO
+
+USE Checkins;
+GO
+
+CREATE USER checkins_app FOR LOGIN checkins_app;
+GO
+
+ALTER ROLE db_datareader ADD MEMBER checkins_app;
+ALTER ROLE db_datawriter ADD MEMBER checkins_app;
+ALTER ROLE db_ddladmin ADD MEMBER checkins_app;
+GO
