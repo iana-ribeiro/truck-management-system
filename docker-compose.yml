@@ -10,7 +10,13 @@ services:
   backend:
     build: ./backend
     ports:
-      - "4000:4000"
+      # "127.0.0.1:" na frente prende essa porta só na interface local da
+      # sua máquina — o navegador continua acessando normalmente via
+      # localhost:4000, mas ninguém na rede/LAN (nem, se essa máquina
+      # tiver IP público, a internet) consegue bater direto no backend
+      # por fora do frontend. Sem esse prefixo, "4000:4000" publica em
+      # TODAS as interfaces de rede da máquina, não só localhost.
+      - "127.0.0.1:4000:4000"
     # Usa as mesmas variáveis do seu backend/.env local — sem credencial
     # nenhuma escrita aqui no compose.
     env_file:
@@ -25,6 +31,11 @@ services:
         # não pelo nome do serviço "backend" — por isso continua sendo
         # localhost:4000 aqui, e não "http://backend:4000".
         VITE_API_URL: http://localhost:4000
+        # Precisa ser IGUAL à API_KEY dentro de backend/.env (lida pelo
+        # serviço "backend" via env_file, logo abaixo). Exporte a mesma
+        # variável no seu terminal antes de rodar "docker compose up"
+        # (ex: export API_KEY=$(grep API_KEY= backend/.env | cut -d= -f2)).
+        VITE_API_KEY: ${API_KEY}
     ports:
       - "8080:80"
     depends_on:

@@ -10,7 +10,12 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 export async function registrarCheckin(dadosCheckin) {
   const resposta = await fetch(`${API_URL}/checkins`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      // Exigido pelo backend (veja backend/middleware/apiKeyAuth.js) —
+      // sem ele, a resposta vem 401 e o check-in não é gravado.
+      'x-api-key': import.meta.env.VITE_API_KEY,
+    },
     body: JSON.stringify(dadosCheckin),
   });
 

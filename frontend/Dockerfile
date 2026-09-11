@@ -24,6 +24,13 @@ COPY . .
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
+# Mesma lógica do VITE_API_URL acima: precisa ser passada como ARG de
+# build, não como env de runtime. Precisa ser IGUAL à API_KEY configurada
+# no backend/.env (veja backend/middleware/apiKeyAuth.js), senão todo
+# pedido do frontend pro backend volta 401.
+ARG VITE_API_KEY
+ENV VITE_API_KEY=$VITE_API_KEY
+
 RUN npm run build
 
 FROM nginx:alpine

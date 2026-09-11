@@ -6,7 +6,13 @@ import cors from 'cors';
 // CORS = Cross-Origin Resource Sharing.
 // Sem isso, o navegador bloquearia o React (rodando numa porta, ex: 5173)
 // de fazer pedidos pro backend (rodando em outra porta, ex: 4000).
-// O cors() libera essa comunicação entre "origens" diferentes.
+// O cors() libera essa comunicação entre "origens" diferentes — aqui só
+// liberamos as origens listadas em CORS_ORIGIN (veja mais abaixo), não
+// qualquer site da internet.
+
+import dotenv from 'dotenv';
+// Lê o arquivo .env e disponibiliza as variáveis (API_KEY, CORS_ORIGIN...)
+// em process.env, ANTES de qualquer coisa abaixo precisar delas.
 
 import express from 'express';
 // Biblioteca que fornece as ferramentas prontas pra criar
@@ -20,6 +26,13 @@ import carregamentosRoutes from './routes/carregamentos.js';
 import checkinsRoutes from './routes/checkins.js';
 // Rotas do check-in do motorista (guardadas num banco SQL Server dedicado —
 // veja backend/database/connection.checkins.mssql.js).
+
+import { apiKeyAuth } from './middleware/apiKeyAuth.js';
+// Trava simples: exige a chave secreta (API_KEY) em todo pedido pras
+// rotas de negócio, pra não deixar /carregamentos e /checkins abertos
+// pra qualquer um que alcance o servidor.
+
+dotenv.config();
 
 // "Para-quedas" contra erros que fogem do try/catch normal. O pacote do
 // SQL Server (mssql/tedious), quando não consegue conectar (endereço
@@ -45,17 +58,23 @@ const PORT = 4000;
 // especificamente.
 
 // Configurações
-app.use(cors());
-// Ativa a permissão de comunicação com o React em toda a aplicação.
+const origensPermitidas = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((origem) => origem.trim());
+
+app.use(cors({ origin: origensPermitidas }));
+// Só libera a comunicação entre "origens" diferentes pros endereços do
+// próprio frontend (CORS_ORIGIN no .env) — não pra qualquer site.
 
 app.use(express.json());
 // Permite que o servidor entenda dados enviados no formato JSON.
 
-app.use('/carregamentos', carregamentosRoutes);
+app.use('/carregamentos', apiKeyAuth, carregamentosRoutes);
 // Diz que qualquer pedido que chegar no endereço /carregamentos
-// deve ser tratado pelas rotas importadas acima.
+// deve, primeiro, passar pela trava da API_KEY, e só então ser
+// tratado pelas rotas importadas acima.
 
-app.use('/checkins', checkinsRoutes);
+app.use('/checkins', apiKeyAuth, checkinsRoutes);
 // Mesma ideia, agora para os pedidos que chegarem em /checkins.
 
 app.listen(PORT, () => {

@@ -12,7 +12,11 @@ export async function buscarCarregamentos() {
   // fetch faz o pedido HTTP para o backend, no endereço
   // "<API_URL>/carregamentos". Isso é assíncrono (demora um pouco),
   // por isso usamos "await": esperamos a resposta chegar antes de seguir.
-  const resposta = await fetch(`${API_URL}/carregamentos`);
+  // O cabeçalho x-api-key é exigido pelo backend (veja
+  // backend/middleware/apiKeyAuth.js) — sem ele, a resposta vem 401.
+  const resposta = await fetch(`${API_URL}/carregamentos`, {
+    headers: { 'x-api-key': import.meta.env.VITE_API_KEY },
+  });
 
   // fetch só rejeita numa falha de REDE (ex: servidor fora do ar) — uma
   // resposta de erro do backend (como 500) ainda chega aqui normalmente,
