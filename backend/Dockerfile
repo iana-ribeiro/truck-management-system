@@ -1,7 +1,7 @@
 # Imagem do backend (API Express). Não precisa compilar nada nativo —
 # tanto o mssql/tedious (SQL Server) quanto o resto das dependências são
 # JavaScript puro, por isso uma imagem "alpine" (bem enxuta) já basta.
-FROM node:22-alpine
+FROM node:24-alpine
 
 WORKDIR /app
 

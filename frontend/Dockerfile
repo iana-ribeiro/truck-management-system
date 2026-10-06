@@ -7,7 +7,7 @@
 #    servidor feito pra isso. O Node/React/node_modules inteiros ficam
 #    pra trás, na etapa anterior — a imagem final não carrega esse peso.
 
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
