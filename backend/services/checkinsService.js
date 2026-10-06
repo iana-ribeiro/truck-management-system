@@ -41,10 +41,10 @@ export async function criarCheckin(dados) {
     .input('ticket', sql.NVarChar, ticket)
     .query(`
       INSERT INTO checkins (
-        numero_carregamento, cliente, transportadora,
-        motorista_nome, motorista_cpf, motorista_cnh, motorista_telefone,
-        veiculo_placa, veiculo_tipo_operacao, veiculo_tipo,
-        aceite_requisitos, aceite_seguranca, ticket
+        load_number, client, carrier,
+        driver_name, driver_cpf, driver_cnh, driver_phone,
+        vehicle_plate, operation_type, vehicle_type,
+        requirements_accepted, safety_accepted, ticket
       ) VALUES (
         @numeroCarregamento, @cliente, @transportadora,
         @motoristaNome, @motoristaCpf, @motoristaCnh, @motoristaTelefone,

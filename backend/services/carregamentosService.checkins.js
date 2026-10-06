@@ -18,12 +18,12 @@ export async function buscarCarregamentos() {
   const checkins = await listarCheckins();
 
   return checkins.map((checkin) => ({
-    pedido: checkin.numero_carregamento,
-    cliente: checkin.cliente,
-    placa: checkin.veiculo_placa,
+    pedido: checkin.load_number,
+    cliente: checkin.client,
+    placa: checkin.vehicle_plate,
     doca: null, // ainda não foi chamado pra nenhuma doca
     programado: null, // esse fluxo ainda não tem horário agendado
-    chegada: checkin.criado_em, // quando o check-in foi concluído = quando o motorista chegou
+    chegada: checkin.created_at, // quando o check-in foi concluído = quando o motorista chegou
     inicioCarregamento: null,
     fimCarregamento: null,
     frete: null,

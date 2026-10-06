@@ -62,27 +62,27 @@ export async function getConnection() {
       CREATE TABLE checkins (
         id INT IDENTITY(1,1) PRIMARY KEY,
 
-        numero_carregamento NVARCHAR(50) NOT NULL,
-        cliente NVARCHAR(200) NULL,
-        transportadora NVARCHAR(200) NULL,
+        load_number NVARCHAR(50) NOT NULL,
+        client NVARCHAR(200) NULL,
+        carrier NVARCHAR(200) NULL,
 
-        motorista_nome NVARCHAR(200) NOT NULL,
-        motorista_cpf NVARCHAR(20) NOT NULL,
-        motorista_cnh NVARCHAR(20) NULL,
-        motorista_telefone NVARCHAR(20) NOT NULL,
+        driver_name NVARCHAR(200) NOT NULL,
+        driver_cpf NVARCHAR(20) NOT NULL,
+        driver_cnh NVARCHAR(20) NULL,
+        driver_phone NVARCHAR(20) NOT NULL,
 
-        veiculo_placa NVARCHAR(10) NOT NULL,
-        veiculo_tipo_operacao NVARCHAR(20) NOT NULL,
-        veiculo_tipo NVARCHAR(30) NOT NULL,
+        vehicle_plate NVARCHAR(10) NOT NULL,
+        operation_type NVARCHAR(20) NOT NULL,
+        vehicle_type NVARCHAR(30) NOT NULL,
 
         -- SQL Server tem um tipo booleano de verdade (BIT), diferente do
         -- SQLite — mesmo assim continuamos usando 0/1, pra manter o
         -- mesmo formato que o resto do código já espera.
-        aceite_requisitos BIT NOT NULL,
-        aceite_seguranca BIT NOT NULL,
+        requirements_accepted BIT NOT NULL,
+        safety_accepted BIT NOT NULL,
 
         ticket NVARCHAR(20) NOT NULL,
-        criado_em DATETIME NOT NULL DEFAULT GETDATE()
+        created_at DATETIME NOT NULL DEFAULT GETDATE()
       );
     END
   `);

@@ -9,7 +9,7 @@
 // se o motorista já chegou e fez check-in (e quando).
 //
 // O que cruza as duas listas é o Pedido (vfluxo) com o
-// numero_carregamento (checkins).
+// load_number (checkins).
 
 import { buscarCarregamentos as buscarCarregamentosVfluxo } from './carregamentosService.mssql.js';
 import { listarCheckins } from './checkinsService.js';
@@ -22,11 +22,11 @@ export async function buscarCarregamentos() {
 
   return carregamentosVfluxo.map((carregamento) => {
     // Comparamos como texto (String + trim) porque não temos garantia de
-    // que o Pedido no vfluxo e o numero_carregamento no check-in venham
+    // que o Pedido no vfluxo e o load_number no check-in venham
     // exatamente no mesmo tipo (ex: número vs texto com espaço).
     const pedido = String(carregamento.Pedido ?? '').trim();
     const checkin = checkins.find(
-      (c) => String(c.numero_carregamento ?? '').trim() === pedido
+      (c) => String(c.load_number ?? '').trim() === pedido
     );
 
     return {
@@ -35,7 +35,7 @@ export async function buscarCarregamentos() {
       placa: carregamento.Placa_Cavalo,
       doca: carregamento.Doca,
       programado: carregamento.Programado,
-      chegada: checkin ? checkin.criado_em : null,
+      chegada: checkin ? checkin.created_at : null,
       inicioCarregamento: carregamento.Inicio_Carregamento,
       fimCarregamento: carregamento.Fim_Carregamento,
       frete: carregamento.Frete,
