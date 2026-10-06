@@ -18,7 +18,7 @@ COPY . .
 EXPOSE 4000
 
 # As credenciais do banco (CHECKINS_DB_*, DB_*) NÃO vão aqui — elas são
-# passadas na hora de RODAR o container (--env-file, docker-compose, ou
-# um Secret do Kubernetes), nunca dentro da imagem. Veja a pergunta que
-# você fez sobre isso: o Dockerfile é igual com ou sem credencial.
+# passadas na hora de RODAR o container (--env-file ou um Secret do
+# Kubernetes), nunca dentro da imagem. Veja a pergunta que você fez
+# sobre isso: o Dockerfile é igual com ou sem credencial.
 CMD ["npm", "start"]
